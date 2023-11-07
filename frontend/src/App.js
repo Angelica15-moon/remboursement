@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Clients from './Clients';
 import Payments from './Payments';
-import PaymentHistory from './PaymentHistory';
+import HistoryPaiment from './HistoryPaiment';
+import Insertion from './Insertion.js';
+
+
 
 class App extends Component {
   constructor(props) {
@@ -30,14 +33,20 @@ class App extends Component {
     return (
       <div>
         <div className="menu">
+        <button onClick={() => this.handleMenuItemClick('insertion')}>insertion</button>
           <button onClick={() => this.handleMenuItemClick('clients')}>Clients</button>
           <button onClick={() => this.handleMenuItemClick('payments')}>Paiements</button>
-          <button onClick={() => this.handleMenuItemClick('paymentHistory')}>Historique des paiements</button>
+          <button onClick={() => this.handleMenuItemClick('historyPaiment')}>Historique des paiments</button>
+         
+         
         </div>
         <div className="content">
+        {activeMenuItem === 'insertion' && <Insertion />}
           {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
           {activeMenuItem === 'payments' && <Payments />}
-          {activeMenuItem === 'paymentHistory' && <PaymentHistory />}
+          {activeMenuItem === 'historyPaiment' && <HistoryPaiment />}
+          
+        
         </div>
       </div>
     );

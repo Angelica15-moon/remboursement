@@ -1,46 +1,53 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-class Clients extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      clientData: [],
-    };
-  }
+function ClientList() {
+  const [clients, setClients] = useState([]);
 
-  componentDidMount() {
-    fetch('/clients') // Assurez-vous que l'URL correspond à votre serveur backend
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data); // Ajoutez cette ligne pour vérifier la réponse du serveur
-      this.setState({ clientData: data });
-    })
-    
-  }
+  useEffect(() => {
+    // Effectuez une requête GET vers votre API pour récupérer les données de la table excel_data
+    axios.get('http://localhost:3002/excel-data') // Remplacez l'URL par l'URL de votre API
+      .then(response => {
+        setClients(response.data);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données de la table excel_data :', error);
+      });
+  }, []);
 
-  render() {
-    const { clientData } = this.state;
-
-    return (
-      <div>
-        <h2>Liste des clients</h2>
-        <ul>
-          {clientData.map((client, index) => (
-            <li key={index}>
-              <p>Ref Client: {client['Ref Client']}</p>
-              <p>Ref Credit: {client['Ref Credit']}</p>
-              <p>Nom: {client.nom}</p>
-              <p>Montant Abandonnée: {client['Montant Abandonnee']}</p>
-              <p>Date de passage en perte: {client['Date de passage en perte']}</p>
-              <p>CA Responsable: {client['CA Responsable']}</p>
-              <p>Agence: {client.Agence}</p>
-              <p>Type: {client.Type}</p>
-            </li>
+  return (
+    <div>
+      <h1>Liste des Clients</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Ref Client</th>
+            <th>Ref Credit</th>
+            <th>Nom</th>
+            <th>Montant Abandonné</th>
+            <th>Date Passage Perte</th>
+            <th>CA Responsable</th>
+            <th>Agence</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clients.map(client => (
+            <tr key={client.RefClient}>
+              <td>{client.RefClient}</td>
+              <td>{client.RefCredit}</td>
+              <td>{client.nom}</td>
+              <td>{client.MontantAbandonnee}</td>
+              <td>{client.DatePassagePerte}</td>
+              <td>{client.CAResponsable}</td>
+              <td>{client.Agence}</td>
+              <td>{client.Type}</td>
+            </tr>
           ))}
-        </ul>
-      </div>
-    );
-  }
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
-export default Clients;
+export default ClientList;
