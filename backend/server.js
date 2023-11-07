@@ -1,0 +1,167 @@
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
+const xlsx = require('xlsx');
+
+const app = express();
+
+const port = 3002;
+
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "", // Mot de passe de la base de données
+  database: "remboursement",
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error("Erreur de connexion à la base de données :", err);
+    return;
+  }
+  console.log("Connecté à la base de données MySQL");
+});
+
+app.use(cors());
+app.use(express.json());
+
+// Route pour récupérer la liste des clients
+app.get("/clients", (req, res) => {
+  const sql = "SELECT * FROM client";
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erreur lors de la récupération des clients :", err);
+      return res.status(500).json({ error: "Erreur lors de la récupération des clients." });
+    }
+
+    return res.status(200).json(results);
+  });
+});
+
+// Route pour enregistrer des remboursements
+app.post("/enregistrer-remboursement", (req, res) => {
+  const remboursementData = req.body;
+
+  if (!remboursementData) {
+    return res.status(400).json({ error: "Données de remboursement invalides." });
+  }
+
+  const insertRemboursementSQL =
+    "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, montantAbandonne) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+  const {
+    montantAPayer,
+    datePaiement,
+    collecteur,
+    agence,
+    numeroFacture,
+    refClient,
+    montantAbandonne,
+  } = remboursementData;
+
+  db.query(
+    insertRemboursementSQL,
+    [montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, montantAbandonne],
+    (err, result) => {
+      if (err) {
+        console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
+        return res.status(500).json({ error: "Erreur lors de l'enregistrement des données de remboursement." });
+      }
+
+      return res.status(200).json({ message: "Données de remboursement enregistrées avec succès." });
+    }
+  );
+});
+
+// Route pour récupérer les détails des clients avec les paiements associés
+app.get('/client-details', (req, res) => {
+  const sql = `
+    SELECT c.*, p.montantAPayer, p.datePaiement, p.collecteur, p.agence, p.numeroFacture, p.montantAbandonne
+    FROM client c
+    LEFT JOIN payments p ON c.RefClient = p.refClient
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Erreur lors de la récupération des détails des clients et des paiements :", err);
+      return res.status(500).json({ error: "Erreur lors de la récupération des données." });
+    }
+
+    return res.status(200).json(results);
+  });
+});
+
+app.post('/import-excel', (req, res) => {
+  const excelData = req.body;
+
+  if (!excelData) {
+    return res.status(400).json({ message: 'No Excel data received.' });
+  }
+
+  const insertQuery = 'INSERT INTO excel_data (RefClient, RefCredit, nom, MontantAbandonnee, DatePassagePerte, CAResponsable, Agence, Type) VALUES ?';
+
+  const values = excelData.map((row) => [row.RefClient, row.RefCredit, row.nom, row.MontantAbandonnee, row.DatePassagePerte, row.CAResponsable, row.Agence, row.Type]);
+
+  db.query(insertQuery, [values], (err, results) => {
+    if (err) {
+      console.error('Error importing Excel data into MySQL:', err);
+      return res.status(500).json({ message: 'Error importing Excel data.' });
+    }
+
+    console.log('Excel data imported successfully into MySQL.');
+    return res.status(200).json({ message: 'Excel data imported successfully into MySQL.' });
+  });
+});
+
+app.get('/excel-data', (req, res) => {
+  // Effectuez une requête SQL pour récupérer les données de la table excel_data
+  const sql = 'SELECT * FROM excel_data';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération des données de la table excel_data :', err);
+      return res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
+    }
+
+    return res.status(200).json(results);
+  });
+});
+
+app.get('/historique-paiements', (req, res) => {
+  // Effectuez une requête SQL pour récupérer l'historique des paiements à partir de la table payments
+  const sql = 'SELECT * FROM payments';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération de l\'historique des paiements :', err);
+      return res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
+    }
+
+    return res.status(200).json(results);
+  });
+});
+app.post('/collecteur', (req, res) => {
+  const { username, password } = req.body;
+
+  // Insérez les données dans la table 'collecteur'
+  const insertQuery = 'INSERT INTO collecteur (username, password) VALUES (?, ?)';
+
+  db.query(insertQuery, [username, password], (err, result) => {
+    if (err) {
+      console.error('Erreur lors de l\'insertion des données de collecteur :', err);
+      return res.status(500).json({ error: "Erreur lors de l'insertion des données de collecteur." });
+    }
+
+    return res.status(200).json({ message: 'Données de collecteur enregistrées avec succès.' });
+  });
+});
+
+
+
+
+    
+
+app.listen(port, () => {
+  console.log(`Serveur backend écoutant sur le port ${port}`);
+});
