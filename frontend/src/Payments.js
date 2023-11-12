@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 
