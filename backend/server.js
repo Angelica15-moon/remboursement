@@ -117,9 +117,6 @@ app.post("/enregistrer-remboursement", async (req, res) => {
   } = remboursementData;
 
   const restApayer = await executionCalulRestApayer(refClient, montantAPayer);
-  if (!montantAPayer) {
-    montantAPayer = 0;
-  }
 
   db.query(
     insertRemboursementSQL,

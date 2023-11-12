@@ -5,6 +5,20 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root');
 
+function validateData(remboursementData) {
+  let errors = "Veuillez remplire tous les champs"
+  if (!remboursementData) {
+    return errors;
+  }
+  if (!remboursementData.montantAPayer) {
+    return errors;
+  }
+  if (!remboursementData.datePaiement) {
+    return errors;
+  }
+  return;
+}
+
 function Payments() {
   const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -29,21 +43,28 @@ function Payments() {
       MontantAbandonne: selectedClient.MontantAbandonnee,
       refClient: selectedClient.RefClient,
     };
-    axios.post("http://localhost:3002/enregistrer-remboursement", remboursementData)
-      .then((response) => {
-        setMontantAPayer("");
-        setDatePaiement("");
-        setCollecteur("");
-        setAgence("");
-        setNumeroFacture("");
-        setMessage("Paiement remboursement enregistré avec succès !");
-        setModalIsOpen(true); 
-      })
-      .catch((error) => {
-        console.error("Erreur lors de l'enregistrement du remboursement :", error);
-        setMessage("Erreur lors de l'enregistrement du remboursement.");
-        setModalIsOpen(true); 
-      });
+
+
+    if (validateData(remboursementData)) {
+      setMessage(validateData(remboursementData));
+      setModalIsOpen(true);
+    } else {
+      axios.post("http://localhost:3002/enregistrer-remboursement", remboursementData)
+        .then((response) => {
+          setMontantAPayer("");
+          setDatePaiement("");
+          setCollecteur("");
+          setAgence("");
+          setNumeroFacture("");
+          setMessage("Paiement remboursement enregistré avec succès !");
+          setModalIsOpen(true);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'enregistrement du remboursement :", error);
+          setMessage("Erreur lors de l'enregistrement du remboursement.");
+          setModalIsOpen(true);
+        });
+    }
   }
 
   useEffect(() => {
@@ -136,6 +157,7 @@ function Payments() {
                 id="montantAPayer"
                 name="montantAPayer"
                 value={montantAPayer}
+                required
                 onChange={(e) => setMontantAPayer(e.target.value)}
               />
             </div>
@@ -146,6 +168,7 @@ function Payments() {
                 id="datePaiement"
                 name="datePaiement"
                 value={datePaiement}
+                required
                 onChange={(e) => setDatePaiement(e.target.value)}
               />
             </div>
@@ -156,6 +179,7 @@ function Payments() {
                 id="collecteur"
                 name="collecteur"
                 value={collecteur}
+                required
                 onChange={(e) => setCollecteur(e.target.value)}
               />
             </div>
@@ -166,6 +190,7 @@ function Payments() {
                 id="agence"
                 name="agence"
                 value={agence}
+                required
                 onChange={(e) => setAgence(e.target.value)}
               />
             </div>
@@ -176,6 +201,7 @@ function Payments() {
                 id="numeroFacture"
                 name="numeroFacture"
                 value={numeroFacture}
+                required
                 onChange={(e) => setNumeroFacture(e.target.value)}
               />
             </div>
