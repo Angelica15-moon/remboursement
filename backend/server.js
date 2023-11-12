@@ -9,8 +9,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "", // Mot de passe de la base de données
+  user: "luca",
+  password: "Just$Me12", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -25,6 +25,64 @@ db.connect((err) => {
 app.use(cors());
 app.use(express.json());
 
+/**
+ * Calcule du reste a payer pour le client choisis par son referece
+ * @param {*} refClient 
+ * @param {*} remboursement 
+ * @returns 
+ */
+function calculRestAPayer(refClient, remboursement) {
+  return new Promise((resolve, reject) => {
+    let ref = refClient.split("/");
+    let client = 0;
+    const sql_client = "SELECT c.montantAbandonnee FROM excel_data c WHERE refClient LIKE '%" + ref[1] + "%'";
+    const sql_payements = "SELECT * FROM payments WHERE refClient LIKE '%" + ref[1] + "%'";
+
+    db.query(sql_client, (err, result) => {
+      if (err) {
+        console.error("Erreur lors de la récupération des clients :", err);
+        reject("Erreur lors de la récupération des clients.");
+        return;
+      }
+      client = result[0].montantAbandonnee;
+    });
+
+    db.query(sql_payements, (err, results) => {
+      if (err) {
+        console.error("Erreur lors de la récupération des clients :", err);
+        reject("Erreur lors de la récupération des clients.");
+        return;
+      }
+      for (resp of results) {
+        remboursement += resp.montantAPayer
+      }
+      // Traitement des résultats ici, par exemple, pour calculer le solde restant.
+      if (client && remboursement) {
+        const soldeRestant = client - remboursement;
+        resolve(soldeRestant);
+      } else {
+        resolve(client);
+      }
+    });
+  });
+}
+
+/**
+ * Execution du calcul avec fonction asynchrone
+ * @param {*} refClient 
+ * @param {*} remboursement 
+ * @returns 
+ */
+async function executionCalulRestApayer(refClient, remboursement) {
+  try {
+    const soldeRestant = await calculRestAPayer(refClient, remboursement);
+    return soldeRestant;
+  } catch (error) {
+    console.error("Une erreur s'est produite :", error);
+    return;
+  }
+}
+
 // Route pour récupérer la liste des clients
 app.get("/clients", (req, res) => {
   const sql = "SELECT * FROM client";
@@ -34,13 +92,12 @@ app.get("/clients", (req, res) => {
       console.error("Erreur lors de la récupération des clients :", err);
       return res.status(500).json({ error: "Erreur lors de la récupération des clients." });
     }
-
     return res.status(200).json(results);
   });
 });
 
 // Route pour enregistrer des remboursements
-app.post("/enregistrer-remboursement", (req, res) => {
+app.post("/enregistrer-remboursement", async (req, res) => {
   const remboursementData = req.body;
 
   if (!remboursementData) {
@@ -48,7 +105,7 @@ app.post("/enregistrer-remboursement", (req, res) => {
   }
 
   const insertRemboursementSQL =
-    "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, montantAbandonne) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, ResteApayer) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
   const {
     montantAPayer,
@@ -56,13 +113,17 @@ app.post("/enregistrer-remboursement", (req, res) => {
     collecteur,
     agence,
     numeroFacture,
-    refClient,
-    montantAbandonne,
+    refClient
   } = remboursementData;
+
+  const restApayer = await executionCalulRestApayer(refClient, montantAPayer);
+  if (!montantAPayer) {
+    montantAPayer = 0;
+  }
 
   db.query(
     insertRemboursementSQL,
-    [montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, montantAbandonne],
+    [montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, restApayer],
     (err, result) => {
       if (err) {
         console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
@@ -156,11 +217,6 @@ app.post('/collecteur', (req, res) => {
     return res.status(200).json({ message: 'Données de collecteur enregistrées avec succès.' });
   });
 });
-
-
-
-
-    
 
 app.listen(port, () => {
   console.log(`Serveur backend écoutant sur le port ${port}`);
