@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Table from 'react-bootstrap/Table';
 
 function HistoriquePaiements() {
   const [excelData, setExcelData] = useState([]);
@@ -18,7 +19,7 @@ function HistoriquePaiements() {
   return (
     <div>
       <h2>Données Excel</h2>
-      <table>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>Ref Client</th>
@@ -45,7 +46,7 @@ function HistoriquePaiements() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

@@ -3,8 +3,10 @@ import Clients from './Clients';
 import Payments from './Payments';
 import HistoryPaiment from './HistoryPaiment';
 import Insertion from './Insertion.js';
-
-
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 class App extends Component {
   constructor(props) {
@@ -32,22 +34,26 @@ class App extends Component {
 
     return (
       <div>
-        <div className="menu">
-        <button onClick={() => this.handleMenuItemClick('insertion')}>insertion</button>
-          <button onClick={() => this.handleMenuItemClick('clients')}>Clients</button>
-          <button onClick={() => this.handleMenuItemClick('payments')}>Paiements</button>
-          <button onClick={() => this.handleMenuItemClick('historyPaiment')}>Historique des paiments</button>
-         
-         
-        </div>
-        <div className="content">
-        {activeMenuItem === 'insertion' && <Insertion />}
-          {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
-          {activeMenuItem === 'payments' && <Payments />}
-          {activeMenuItem === 'historyPaiment' && <HistoryPaiment />}
-          
-        
-        </div>
+        <Row>
+          <Col sm={2}>
+            <Card>
+              <Card.Header>Cefor - GAP</Card.Header>
+              <Card.Text className='px-2 text-sm' >NAVIGATION</Card.Text>
+              <ListGroup variant="flush">
+                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('clients')}>Clients</a></ListGroup.Item>
+                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a></ListGroup.Item>
+                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a></ListGroup.Item>
+                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('insertion')}>insertion</a></ListGroup.Item>
+              </ListGroup>
+            </Card>
+          </Col>
+          <Col sm={10}>
+            {activeMenuItem === 'insertion' && <Insertion />}
+            {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
+            {activeMenuItem === 'payments' && <Payments />}
+            {activeMenuItem === 'historyPaiment' && <HistoryPaiment />}
+          </Col>
+        </Row>
       </div>
     );
   }

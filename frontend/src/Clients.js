@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Table from 'react-bootstrap/Table';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
@@ -18,7 +19,7 @@ function ClientList() {
   return (
     <div>
       <h1>Liste des Clients</h1>
-      <table>
+      <Table bordered hover>
         <thead>
           <tr>
             <th>Ref Client</th>
@@ -45,7 +46,7 @@ function ClientList() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

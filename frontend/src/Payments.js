@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-
+import Card from 'react-bootstrap/Card';
+import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 
 Modal.setAppElement('#root');
 
@@ -88,9 +90,10 @@ function Payments() {
   }
 
   return (
-    <div>
+    <div className='m-3 p-3'>
       <h2>Payer un remboursement</h2>
-      <select value={selectedRef} onChange={handleRefChange}>
+      <Form.Select aria-label="Default select example" value={selectedRef} onChange={handleRefChange}>
+        <option>Ref Client</option>
         {clients.map((client) => (
           <option key={client.id} value={client.RefClient}>
             {client.RefClient}
@@ -101,10 +104,10 @@ function Payments() {
             {client.RefCredit}
           </option>
         ))}
-      </select>
+      </Form.Select>
       {selectedClient && (
         <div>
-          <table>
+          <Table striped bordered hover>
             <tbody>
               <tr>
                 <th>Nom</th>
@@ -140,7 +143,7 @@ function Payments() {
               </tr>
               {/* (Other client details) */}
             </tbody>
-          </table>
+          </Table>
           <hr />
           <h2>Champs à saisir ....</h2>
           <div>
