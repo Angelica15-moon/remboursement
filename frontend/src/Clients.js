@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ReactDataTableIO } from 'react-datatable-io';
-import 'react-datatable-io/dist/index.css';
+import DataTable from 'react-data-table-component';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
@@ -17,58 +16,49 @@ function ClientList() {
       });
   }, []);
 
-  const data = [
-    { "id": 1, "fname": 'Mark', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Success" },
-    { "id": 2, "fname": 'Nitesh', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Success" },
-    { "id": 3, "fname": 'Akash', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Success" },
-    { "id": 4, "fname": 'Smith', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Success" },
-    { "id": 5, "fname": 'Zolo', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Success" },
-    { "id": 6, "fname": 'Olo', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 7, "fname": 'Oark', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 8, "fname": 'Smark', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 9, "fname": 'Akark', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 10, "fname": 'Lark', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 11, "fname": 'Sneha', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 12, "fname": 'Neha', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 13, "fname": 'Manish', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-    { "id": 14, "fname": 'Naman', "lname": "Otto", "username": '@mdo', "date": '21-04-2000', "time": '21-04-2000', status: "Failed" },
-  ];
-  const header = [
-    { label: "Ref Client", key: "refClient", value: true, sortable: true },
-    { label: "Ref Credit", key: "refCredit", value: true, sortable: true },
-    { label: "Nom", key: "nom", value: true, sortable: true },
-    { label: "Montant Abandonné", key: "montantAbandonnee", value: true, sortable: true },
-    { label: "Date Passage Perte", key: "datePassagePerte", value: true, sortable: true },
-    { label: "CA Responsable", key: "caResponsable", value: true, sortable: true },
-    { label: "Agence", key: "agence", value: true, sortable: true },
-    { label: "Type", key: "type", value: true, sortable: true },
-  ];
-
   const clientList = clients.map(client => new Client(
     client.RefClient, client.RefClient, client.nom,
     client.MontantAbandonnee, client.DatePassagePerte,
     client.CAResponsable, client.Agence, client.Type
   ));
 
-  console.log(clientList);
+  const columns = [
+    { name: 'Ref Client', selector: row => row.refClient, sortable: true },
+    { name: 'Ref Credit', selector: row => row.refCredit, sortable: true },
+    { name: 'Nom', selector: row => row.nom, sortable: true },
+    { name: 'Montant Abandonné', selector: row => row.montantAbandonnee, sortable: true },
+    { name: 'Date Passage Perte', selector: row => row.datePassagePerte, sortable: true },
+    { name: 'CA Responsable', selector: row => row.caResponsable, sortable: true },
+    { name: 'Agence', selector: row => row.agence, sortable: true },
+    { name: 'Type', selector: row => row.type, sortable: true }
+  ];
+
+  const paginationComponentOptions = {
+    rowsPerPageText: 'Lignes par page',
+    rangeSeparatorText: 'sur',
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'Tous',
+  };
 
   return (
     <div>
-      <h1>Liste des Clients</h1>
-      <ReactDataTableIO
-        tableData={data}
-        tableHeader={header}
-        isSearchEnabled={true}
-        isExport={true}
-        isTableToggle={true}
-        tableStriped={false}
-        tableBordered={true}
-        tableHover={true}
-        tableResponsive={true}
-        tableHeaderStyle={{
-          backgroundColor: "#232323",
-          color: "#fff",
-        }}
+      <DataTable
+        title="Liste des Clients"
+        columns={columns}
+        data={clientList}
+        dense
+        direction="auto"
+        pagination
+        paginationComponentOptions={paginationComponentOptions}
+        fixedHeader
+        fixedHeaderScrollHeight="550px"
+        highlightOnHover
+        pointerOnHover
+        persistTableHead
+        responsive
+        subHeader
+        subHeaderAlign="right"
+        subHeaderWrap
       />
     </div>
   );
