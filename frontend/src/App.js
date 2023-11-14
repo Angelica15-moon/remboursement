@@ -40,10 +40,10 @@ class App extends Component {
               <Card.Header>Cefor - GAP</Card.Header>
               <Card.Text className='px-2 text-sm' >NAVIGATION</Card.Text>
               <ListGroup variant="flush">
-                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('clients')}>Clients</a></ListGroup.Item>
-                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a></ListGroup.Item>
-                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a></ListGroup.Item>
-                <ListGroup.Item><a href="javascript:void(0)" onClick={() => this.handleMenuItemClick('insertion')}>insertion</a></ListGroup.Item>
+                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a></ListGroup.Item>
+                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a></ListGroup.Item>
+                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a></ListGroup.Item>
+                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('insertion')}>insertion</a></ListGroup.Item>
               </ListGroup>
             </Card>
           </Col>
