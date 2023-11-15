@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Table from 'react-bootstrap/Table';
+import Card from 'react-bootstrap/Card';
+import DataTable from 'react-data-table-component';
 
 function HistoriquePaiements() {
   const [excelData, setExcelData] = useState([]);
@@ -16,37 +17,43 @@ function HistoriquePaiements() {
       });
   }, []);
 
+  const columns = [
+    { name: 'Ref Client', selector: row => row.RefClient, sortable: true },
+    { name: 'Ref Credit', selector: row => row.RefCredit, sortable: true },
+    { name: 'Nom', selector: row => row.nom, sortable: true },
+    { name: 'Montant Abandonné', selector: row => row.MontantAbandonnee, sortable: true },
+    { name: 'Date Passage Perte', selector: row => row.DatePassagePerte, sortable: true },
+    { name: 'CA Responsable', selector: row => row.CAResponsable, sortable: true },
+    { name: 'Agence', selector: row => row.Agence, sortable: true },
+    { name: 'Type', selector: row => row.Type, sortable: true }
+  ];
+
+  const paginationComponentOptions = {
+    rowsPerPageText: 'Lignes par page',
+    rangeSeparatorText: 'sur',
+    selectAllRowsItem: true,
+    selectAllRowsItemText: 'Tous',
+  };
+
   return (
-    <div>
-      <h2>Données Excel</h2>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Ref Client</th>
-            <th>Ref Credit</th>
-            <th>Nom</th>
-            <th>Montant Abandonné</th>
-            <th>Date Passage Perte</th>
-            <th>CA Responsable</th>
-            <th>Agence</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {excelData.map((row) => (
-            <tr key={row.id}>
-              <td>{row.RefClient}</td>
-              <td>{row.RefCredit}</td>
-              <td>{row.nom}</td>
-              <td>{row.MontantAbandonnee}</td>
-              <td>{row.DatePassagePerte}</td>
-              <td>{row.CAResponsable}</td>
-              <td>{row.Agence}</td>
-              <td>{row.Type}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className='p-3'>
+      <Card>
+        <Card.Header>Données Excel</Card.Header>
+        <DataTable
+          columns={columns}
+          data={excelData}
+          dense
+          direction="auto"
+          pagination
+          paginationComponentOptions={paginationComponentOptions}
+          fixedHeader
+          fixedHeaderScrollHeight="500px"
+          highlightOnHover
+          pointerOnHover
+          persistTableHead
+          responsive
+        />
+      </Card>
     </div>
   );
 }

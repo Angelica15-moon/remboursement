@@ -4,6 +4,7 @@ import DataTable from 'react-data-table-component';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
@@ -52,55 +53,57 @@ function ClientList() {
   }
 
   return (
-    <div>
-      <h1>Liste des Clients</h1>
-      <Row className='mb-3 px-3'>
-        <Col>
-          <Form.Label htmlFor="ref-client">Referecnce client</Form.Label>
-          <Form.Select id='ref-client' aria-label="Referecnce client" size='sm' onChange={handleFiilter}>
-            <option>RefClient</option>
-            {clientList.map((opt) => (
-              <option key={opt.refClient} value={opt.refClient}>
-                {opt.refClient}
-              </option>
-            ))}
-          </Form.Select>
-        </Col>
-        <Col>
-          <Form.Label htmlFor="ref-credit">Referecnce credit</Form.Label>
-          <Form.Select id='ref-client' aria-label="Referecnce credit" size='sm' onChange={handleFiilter}>
-            <option>RefCredit</option>
-            {clientList.map((opt) => (
-              <option key={opt.refCredit} value={opt.refCredit}>
-                {opt.refCredit}
-              </option>
-            ))}
-          </Form.Select>
-        </Col>
-        <Col>
-          <Form.Label htmlFor="autre-critere">Password</Form.Label>
-          <Form.Control
-            type="text"
-            id="autre-critere"
-            aria-describedby="autre critere de recherche"
-            size='sm'
+    <div className='p-3'>
+      <Card>
+        <Card.Header>Liste des Clients</Card.Header>
+          <Row className='mb-3 px-3'>
+            <Col>
+              <Form.Label htmlFor="ref-client">Referecnce client</Form.Label>
+              <Form.Select id='ref-client' aria-label="Referecnce client" size='sm' onChange={handleFiilter}>
+                <option>RefClient</option>
+                {clientList.map((opt) => (
+                  <option key={opt.refClient} value={opt.refClient}>
+                    {opt.refClient}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col>
+              <Form.Label htmlFor="ref-credit">Referecnce credit</Form.Label>
+              <Form.Select id='ref-client' aria-label="Referecnce credit" size='sm' onChange={handleFiilter}>
+                <option>RefCredit</option>
+                {clientList.map((opt) => (
+                  <option key={opt.refCredit} value={opt.refCredit}>
+                    {opt.refCredit}
+                  </option>
+                ))}
+              </Form.Select>
+            </Col>
+            <Col>
+              <Form.Label htmlFor="autre-critere">Autre critère</Form.Label>
+              <Form.Control
+                type="text"
+                id="autre-critere"
+                aria-describedby="autre critere de recherche"
+                size='sm'
+              />
+            </Col>
+          </Row>
+          <DataTable
+            columns={columns}
+            data={clientList}
+            dense
+            direction="auto"
+            pagination
+            paginationComponentOptions={paginationComponentOptions}
+            fixedHeader
+            fixedHeaderScrollHeight="400px"
+            highlightOnHover
+            pointerOnHover
+            persistTableHead
+            responsive
           />
-        </Col>
-      </Row>
-      <DataTable
-        columns={columns}
-        data={clientList}
-        dense
-        direction="auto"
-        pagination
-        paginationComponentOptions={paginationComponentOptions}
-        fixedHeader
-        fixedHeaderScrollHeight="450px"
-        highlightOnHover
-        pointerOnHover
-        persistTableHead
-        responsive
-      />
+      </Card>
     </div>
   );
 }

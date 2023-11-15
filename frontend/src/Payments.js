@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 Modal.setAppElement('#root');
 
@@ -89,159 +92,119 @@ function Payments() {
   }
 
   return (
-    <div className='m-3 p-3'>
-      <h2>Payer un remboursement</h2>
-      <Form.Select aria-label="Default select example" value={selectedRef} onChange={handleRefChange}>
-        <option>Ref Client</option>
-        {clients.map((client) => (
-          <option key={client.id} value={client.RefClient}>
-            {client.RefClient}
-          </option>
-        ))}
-        {clients.map((client) => (
-          <option key={client.id} value={client.RefCredit}>
-            {client.RefCredit}
-          </option>
-        ))}
-      </Form.Select>
-      {selectedClient && (
-        <div>
-          <Table striped bordered hover>
-            <tbody>
-              <tr>
-                <th>Nom</th>
-                <td>{selectedClient.nom}</td>
-              </tr>
-              <tr>
-                <th>Ref Client</th>
-                <td>{selectedClient.RefClient}</td>
-              </tr>
-              <tr>
-                <th>Ref Credit</th>
-                <td>{selectedClient.RefCredit}</td>
-              </tr>
-              <tr>
-                <th>Montant Abandonné</th>
-                <td>{selectedClient.MontantAbandonnee}</td>
-              </tr>
-              <tr>
-                <th>Date de passage en perte</th>
-                <td>{selectedClient.DatePassagePerte}</td>
-              </tr>
-              <tr>
-                <th>CA Responsable</th>
-                <td>{selectedClient.CAResponsable}</td>
-              </tr>
-              <tr>
-                <th>Agence</th>
-                <td>{selectedClient.Agence}</td>
-              </tr>
-              <tr>
-                <th>Type</th>
-                <td>{selectedClient.Type}</td>
-              </tr>
-              {/* (Other client details) */}
-            </tbody>
-          </Table>
-          <hr />
-          <h2>Champs à saisir ....</h2>
-          <div>
-            <strong>Montant Abandonné :</strong> {selectedClient.MontantAbandonnee}
+    <div className='p-3'>
+      <Card>
+        <Card.Header>Payer un remboursement</Card.Header>
+        <Row className='p-2'>
+          <Col>
+            <Form.Select aria-label="Default select example" size='sm' value={selectedRef} onChange={handleRefChange}>
+              <option>Ref Client</option>
+              {clients.map((client) => (
+                <option key={client.id} value={client.RefClient}>
+                  {client.RefClient}
+                </option>
+              ))}
+              {clients.map((client) => (
+                <option key={client.id} value={client.RefCredit}>
+                  {client.RefCredit}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
+          <Col></Col><Col></Col><Col></Col>
+        </Row>
+        
+        {selectedClient && (
+          <div className='px-2'>
+            <Row className='p-2'>
+              <Col>
+                <Form.Label><strong as="h5">Nom :&nbsp;</strong>{selectedClient.nom}</Form.Label><br/>
+                <Form.Label><strong as="h5">Ref Client :&nbsp;</strong>{selectedClient.RefClient}</Form.Label><br/>
+                <Form.Label><strong as="h5">Ref Credit :&nbsp;</strong>{selectedClient.RefCredit}</Form.Label><br/>
+                <Form.Label><strong as="h5">Montant Abandonné :&nbsp;</strong>{selectedClient.MontantAbandonnee}</Form.Label><br/>
+              </Col>
+              <Col>
+                <Form.Label><strong>Date de passage en perte :&nbsp;</strong>{selectedClient.DatePassagePerte}</Form.Label><br/>
+                <Form.Label><strong>CA Responsable :&nbsp;</strong>{selectedClient.CAResponsable}</Form.Label><br/>
+                <Form.Label><strong>Agence :&nbsp;</strong>{selectedClient.Agence}</Form.Label><br/>
+                <Form.Label><strong>Type :&nbsp;</strong>{selectedClient.Type}</Form.Label><br/>
+              </Col>
+            </Row>
+            <hr />
+            <h2>Champs à saisir ....</h2>
+            <Form onSubmit={handleRemboursementSubmit}>
+              <Row className='p-2'>
+                <Col>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="montantAPayer">Montant à payer :</Form.Label>
+                    <Form.Control type='number' id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
+                      required
+                      size='sm'
+                      onChange={(e) => setMontantAPayer(e.target.value)} />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="datePaiement">Date de paiement :</Form.Label>
+                      <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
+                        value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="collecteur">Collecteur :</Form.Label>
+                      <Form.Control type='text' id="collecteur" placeholder="Collecteur" required size='sm'
+                            value={collecteur} onChange={(e) => setCollecteur(e.target.value)} />
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="agence">Agence :</Form.Label>
+                      <Form.Control type='text' id="agence" placeholder="Agence" value={agence}
+                        required size='sm' onChange={(e) => setAgence(e.target.value)}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                    <Form.Label htmlFor="numeroFacture">Numéro de facture :</Form.Label>
+                    <Form.Control type="text" id="numeroFacture" name="numeroFacture"
+                      value={numeroFacture} required onChange={(e) => setNumeroFacture(e.target.value)}
+                      size='sm' />
+                    </Form.Group>
+                    <div className='text-end mt-2'>
+                      <Button type='cancel' className='mx-3' variant="danger">Annuler</Button>
+                      <Button type='submit' variant="success">Enregistrer</Button>
+                    </div>
+                </Col>
+              </Row>
+            </Form>
           </div>
-          <div>
-            <strong>Ref Client :</strong> {selectedClient.RefClient}
-          </div>
-          <form onSubmit={handleRemboursementSubmit}>
-            <div>
-              <label htmlFor="montantAPayer">Montant à payer :</label>
-              <input
-                type="text"
-                id="montantAPayer"
-                name="montantAPayer"
-                value={montantAPayer}
-                required
-                onChange={(e) => setMontantAPayer(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="datePaiement">Date de paiement :</label>
-              <input
-                type="date"
-                id="datePaiement"
-                name="datePaiement"
-                value={datePaiement}
-                required
-                onChange={(e) => setDatePaiement(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="collecteur">Collecteur :</label>
-              <input
-                type="text"
-                id="collecteur"
-                name="collecteur"
-                value={collecteur}
-                required
-                onChange={(e) => setCollecteur(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="agence">Agence :</label>
-              <input
-                type="text"
-                id="agence"
-                name="agence"
-                value={agence}
-                required
-                onChange={(e) => setAgence(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="numeroFacture">Numéro de facture :</label>
-              <input
-                type="text"
-                id="numeroFacture"
-                name="numeroFacture"
-                value={numeroFacture}
-                required
-                onChange={(e) => setNumeroFacture(e.target.value)}
-              />
-            </div>
-            <button type="submit">Enregistrer le Remboursement</button>
-            <button type="button">Annuler le Remboursement</button>
-          </form>
-        </div>
-      )}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Message d'alerte"
-        style={{
-          overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)'
-          },
-          content: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'white',
-            padding: '20px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            outline: 'none',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            maxWidth: '400px',
-            width: '100%'
-          }
-        }}
-      >
-        <p>{message}</p>
-        <button onClick={() => setModalIsOpen(false)}>Fermer</button>
-      </Modal>
+        )}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          contentLabel="Message d'alerte"
+          style={{
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)'
+            },
+            content: {
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'white',
+              padding: '20px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              outline: 'none',
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '400px',
+              width: '100%'
+            }
+          }}
+        >
+          <p>{message}</p>
+          <button onClick={() => setModalIsOpen(false)}>Fermer</button>
+        </Modal>
+      </Card>
     </div>
   );
 }

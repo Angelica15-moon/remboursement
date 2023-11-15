@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 export default function App() {
   const [excelData, setExcelData] = useState(null);
@@ -69,14 +73,16 @@ export default function App() {
   };
 
   return (
-    <div>
-      <h1>App</h1>
-      <input
-        type="file"
-        accept=".xls,.xlsx"
-        onChange={handleExcelUpload}
-      />
-      <button onClick={handleImportExcel}>Importer</button>
+    <div className='m-3'>
+      <Card className='m-3'>
+        <Card.Header>Importer données par fichier excel</Card.Header>
+        <InputGroup className="m-3">
+          <Form.Control id="fileImport" 
+          type='file' accept=".xls,.xlsx" onChange={handleExcelUpload}
+          className='m-5' aria-describedby="file-input" />
+        </InputGroup>
+        <Button onClick={handleImportExcel} variant="success">Importer</Button>
+      </Card>
     </div>
   );
 }
