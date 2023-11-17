@@ -9,6 +9,7 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
 
 class App extends Component {
   constructor(props) {
@@ -36,14 +37,19 @@ class App extends Component {
 
     return (
       <div className='bg-secondary height-100'>
-        <Navbar bg="light" data-bs-theme="light" className='hide-on-pc px-2'>
-          <Navbar.Brand href="#">Cefor - GAP</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
-            <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
-            <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
-            <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
-          </Nav>
+        <Navbar bg="light" collapseOnSelect data-bs-theme="light" expand="lg" className="bg-body-tertiary hide-on-pc px-2">
+          <Container fluid>
+            <Navbar.Brand href="#" onClick={() => this.handleMenuItemClick('clients')}>Cefor - GAP</Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Collapse id="navbarScroll">
+              <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '200px' }} navbarScroll >
+              <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
         </Navbar>
         <Row>
           <Col lg={2} sm={2} xs={12}>
