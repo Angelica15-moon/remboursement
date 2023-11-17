@@ -7,6 +7,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
 class App extends Component {
   constructor(props) {
@@ -33,17 +36,26 @@ class App extends Component {
     const { activeMenuItem, clientData } = this.state;
 
     return (
-      <div>
+      <div className='bg-secondary height-100'>
+        <Navbar bg="light" data-bs-theme="light" className='hide-on-pc px-2'>
+          <Navbar.Brand href="#">Cefor - GAP</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
+            <Nav.Link href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
+            <Nav.Link href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
+            <Nav.Link href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
+          </Nav>
+        </Navbar>
         <Row>
           <Col sm={2}>
-            <Card>
-              <Card.Header>Cefor - GAP</Card.Header>
-              <Card.Text className='px-2 text-sm' >NAVIGATION</Card.Text>
-              <ListGroup variant="flush">
+            <Card className='show-on-pc'>
+              <Card.Header className='mb-4'>Cefor - GAP</Card.Header>
+              <Card.Text className='px-4 mb-0 small-text' >NAVIGATION</Card.Text>
+              <ListGroup variant="flush" className='mt-0 height-100' >
                 <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a></ListGroup.Item>
                 <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a></ListGroup.Item>
                 <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a></ListGroup.Item>
-                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('insertion')}>insertion</a></ListGroup.Item>
+                <ListGroup.Item><a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a></ListGroup.Item>
               </ListGroup>
             </Card>
           </Col>

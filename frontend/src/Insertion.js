@@ -22,7 +22,7 @@ export default function App() {
         const worksheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(worksheet);
 
-      
+
 
         console.log('Données Excel chargées:', parsedData);
         setExcelData(parsedData);
@@ -34,10 +34,10 @@ export default function App() {
 
   const handleImportExcel = () => {
 
-   
+
     if (excelData) {
 
-  
+
 
       const mappedData = excelData.map((row) => ({
         RefClient: row.RefClient,
@@ -76,12 +76,16 @@ export default function App() {
     <div className='m-3'>
       <Card className='m-3'>
         <Card.Header>Importer données par fichier excel</Card.Header>
-        <InputGroup className="m-3">
-          <Form.Control id="fileImport" 
-          type='file' accept=".xls,.xlsx" onChange={handleExcelUpload}
-          className='m-5' aria-describedby="file-input" />
-        </InputGroup>
-        <Button onClick={handleImportExcel} variant="success">Importer</Button>
+        <Card.Body className='p-5'>
+          <InputGroup className="m-3">
+            <Form.Control id="fileImport"
+              type='file' accept=".xls,.xlsx" onChange={handleExcelUpload}
+              className='m-5' aria-describedby="file-input" />
+          </InputGroup>
+          <div className='text-center'>
+            <Button onClick={handleImportExcel} variant="success">Importer</Button>
+          </div>
+        </Card.Body>
       </Card>
     </div>
   );

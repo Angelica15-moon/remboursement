@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 Modal.setAppElement('#root');
 
@@ -83,51 +84,73 @@ function Payments() {
 
   const handleRefChange = (e) => {
     const selectedRefValue = e.target.value;
+    const datep = new Date();
     setSelectedRef(selectedRefValue);
     const client = clients.find(
       (c) =>
         c.RefClient === selectedRefValue || c.RefCredit === selectedRefValue
     );
+    setDatePaiement(datep.getDate());
     setSelectedClient(client);
+  }
+
+  function clearData(params) {
+    setCollecteur("");
+    setMontantAPayer(0);
+    setAgence("");
+    setDatePaiement("");
+    setNumeroFacture("");
   }
 
   return (
     <div className='p-3'>
-      <Card>
-        <Card.Header>Payer un remboursement</Card.Header>
+      <Card className='height-100'>
+        <Card.Header className='mb-2'>Payer un remboursement</Card.Header>
         <Row className='p-2'>
           <Col>
-            <Form.Select aria-label="Default select example" size='sm' value={selectedRef} onChange={handleRefChange}>
-              <option>Ref Client</option>
-              {clients.map((client) => (
-                <option key={client.id} value={client.RefClient}>
-                  {client.RefClient}
-                </option>
-              ))}
-              {clients.map((client) => (
-                <option key={client.id} value={client.RefCredit}>
-                  {client.RefCredit}
-                </option>
-              ))}
-            </Form.Select>
+            <InputGroup className="mb-3">
+              <InputGroup.Text id="ref-client">Ref Client</InputGroup.Text>
+              <Form.Select aria-label="Reference client" size='sm'
+                value={selectedRef} aria-describedby="ref-client" onChange={handleRefChange}>
+                <option>Ref Client</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.RefClient}>
+                    {client.RefClient}
+                  </option>
+                ))}
+              </Form.Select>
+            </InputGroup>
           </Col>
-          <Col></Col><Col></Col><Col></Col>
+          <Col>
+            <InputGroup className="mb-3">
+              <InputGroup.Text id="ref-credit">Ref Credit</InputGroup.Text>
+              <Form.Select aria-label="Reference credit" size='sm'
+                value={selectedRef} aria-describedby="ref-credit" onChange={handleRefChange}>
+                <option>Ref Credit</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.RefCredit}>
+                    {client.RefCredit}
+                  </option>
+                ))}
+              </Form.Select>
+            </InputGroup>
+          </Col>
+          <Col></Col><Col></Col>
         </Row>
-        
         {selectedClient && (
           <div className='px-2'>
             <Row className='p-2'>
               <Col>
-                <Form.Label><strong as="h5">Nom :&nbsp;</strong>{selectedClient.nom}</Form.Label><br/>
-                <Form.Label><strong as="h5">Ref Client :&nbsp;</strong>{selectedClient.RefClient}</Form.Label><br/>
-                <Form.Label><strong as="h5">Ref Credit :&nbsp;</strong>{selectedClient.RefCredit}</Form.Label><br/>
-                <Form.Label><strong as="h5">Montant Abandonné :&nbsp;</strong>{selectedClient.MontantAbandonnee}</Form.Label><br/>
+                <Form.Label><strong as="h5">Nom :&nbsp;</strong>{selectedClient.nom}</Form.Label><br />
+                <Form.Label><strong as="h5">Ref Client :&nbsp;</strong>{selectedClient.RefClient}</Form.Label><br />
+                <Form.Label><strong as="h5">Ref Credit :&nbsp;</strong>{selectedClient.RefCredit}</Form.Label><br />
+                <Form.Label><strong as="h5">Montant Abandonné :&nbsp;</strong>{selectedClient.MontantAbandonnee}</Form.Label><br />
               </Col>
               <Col>
-                <Form.Label><strong>Date de passage en perte :&nbsp;</strong>{selectedClient.DatePassagePerte}</Form.Label><br/>
-                <Form.Label><strong>CA Responsable :&nbsp;</strong>{selectedClient.CAResponsable}</Form.Label><br/>
-                <Form.Label><strong>Agence :&nbsp;</strong>{selectedClient.Agence}</Form.Label><br/>
-                <Form.Label><strong>Type :&nbsp;</strong>{selectedClient.Type}</Form.Label><br/>
+                <Form.Label><strong>Date de passage en perte :&nbsp;</strong>{selectedClient.DatePassagePerte}</Form.Label><br />
+                <Form.Label><strong>CA Responsable :&nbsp;</strong>{selectedClient.CAResponsable}</Form.Label><br />
+                <Form.Label><strong>Agence :&nbsp;</strong>{selectedClient.Agence}</Form.Label><br />
+                <Form.Label><strong>Type :&nbsp;</strong>{selectedClient.Type}</Form.Label><br />
               </Col>
             </Row>
             <hr />
@@ -138,37 +161,35 @@ function Payments() {
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="montantAPayer">Montant à payer :</Form.Label>
                     <Form.Control type='number' id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
-                      required
-                      size='sm'
-                      onChange={(e) => setMontantAPayer(e.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="datePaiement">Date de paiement :</Form.Label>
-                      <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
-                        value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)}/>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="collecteur">Collecteur :</Form.Label>
-                      <Form.Control type='text' id="collecteur" placeholder="Collecteur" required size='sm'
-                            value={collecteur} onChange={(e) => setCollecteur(e.target.value)} />
-                    </Form.Group>
+                      required size='sm' onChange={(e) => setMontantAPayer(e.target.value)} />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="datePaiement">Date de paiement :</Form.Label>
+                    <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
+                      value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)} />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="collecteur">Collecteur :</Form.Label>
+                    <Form.Control type='text' id="collecteur" placeholder="Collecteur" required size='sm'
+                      value={collecteur} onChange={(e) => setCollecteur(e.target.value)} />
+                  </Form.Group>
                 </Col>
                 <Col>
-                    <Form.Group className="mb-3">
-                      <Form.Label htmlFor="agence">Agence :</Form.Label>
-                      <Form.Control type='text' id="agence" placeholder="Agence" value={agence}
-                        required size='sm' onChange={(e) => setAgence(e.target.value)}/>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="agence">Agence :</Form.Label>
+                    <Form.Control type='text' id="agence" placeholder="Agence" value={agence}
+                      required size='sm' onChange={(e) => setAgence(e.target.value)} />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
                     <Form.Label htmlFor="numeroFacture">Numéro de facture :</Form.Label>
                     <Form.Control type="text" id="numeroFacture" name="numeroFacture"
                       value={numeroFacture} required onChange={(e) => setNumeroFacture(e.target.value)}
                       size='sm' />
-                    </Form.Group>
-                    <div className='text-end mt-2'>
-                      <Button type='cancel' className='mx-3' variant="danger">Annuler</Button>
-                      <Button type='submit' variant="success">Enregistrer</Button>
-                    </div>
+                  </Form.Group>
+                  <div className='text-end mt-2'>
+                    <Button type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>
+                    <Button type='submit' variant="success">Enregistrer</Button>
+                  </div>
                 </Col>
               </Row>
             </Form>

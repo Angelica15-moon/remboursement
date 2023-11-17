@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import DataTable from 'react-data-table-component';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function HistoriquePaiements() {
   const [excelData, setExcelData] = useState([]);
+  const [selectedRef, setSelectedRef] = useState("");
+  const [clients, setClients] = useState(null);
 
   useEffect(() => {
     // Effectuez une requête pour récupérer les données de la table excel_data
@@ -17,15 +23,21 @@ function HistoriquePaiements() {
       });
   }, []);
 
+  const handleRefChange = (e) => {
+    const selectedRefValue = e.target.value;
+    const datep = new Date();
+    setSelectedRef(selectedRefValue);
+    const client = excelData.find((c) => c.RefClient === selectedRefValue);
+    setClients(client);
+  }
+
   const columns = [
-    { name: 'Ref Client', selector: row => row.RefClient, sortable: true },
     { name: 'Ref Credit', selector: row => row.RefCredit, sortable: true },
-    { name: 'Nom', selector: row => row.nom, sortable: true },
-    { name: 'Montant Abandonné', selector: row => row.MontantAbandonnee, sortable: true },
-    { name: 'Date Passage Perte', selector: row => row.DatePassagePerte, sortable: true },
-    { name: 'CA Responsable', selector: row => row.CAResponsable, sortable: true },
-    { name: 'Agence', selector: row => row.Agence, sortable: true },
-    { name: 'Type', selector: row => row.Type, sortable: true }
+    { name: 'Date', selector: row => row.DatePassagePerte, sortable: true },
+    { name: 'Montant payé', selector: row => row.MontantAbandonnee, sortable: true },
+    { name: 'Reste', selector: row => row.MontantAbandonnee, sortable: true },
+    { name: 'Agent', selector: row => row.Agence, sortable: true },
+    { name: 'Agence', selector: row => row.Agence, sortable: true }
   ];
 
   const paginationComponentOptions = {
@@ -38,21 +50,33 @@ function HistoriquePaiements() {
   return (
     <div className='p-3'>
       <Card>
-        <Card.Header>Données Excel</Card.Header>
-        <DataTable
-          columns={columns}
-          data={excelData}
-          dense
-          direction="auto"
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          fixedHeader
-          fixedHeaderScrollHeight="500px"
-          highlightOnHover
-          pointerOnHover
-          persistTableHead
-          responsive
-        />
+        <Card.Header className='mb-2'>Données Excel</Card.Header>
+        <Card.Body className='p-2'>
+          <Row className='p-2'>
+            <Col>
+              <InputGroup className="mb-3">
+                <InputGroup.Text id="ref-client">Ref Client</InputGroup.Text>
+                <Form.Select aria-label="Reference client" size='sm'
+                  value={selectedRef} aria-describedby="ref-client" onChange={handleRefChange}>
+                  <option>Ref Client</option>
+                  {excelData.map((client) => (
+                    <option key={client.id} value={client.RefClient}>{client.RefClient}</option>
+                  ))}
+                </Form.Select>
+              </InputGroup>
+            </Col>
+            <Col></Col>
+            <Col></Col><Col></Col>
+          </Row>
+          <hr className='mb-3' />
+          {clients && (
+            <div className='px-3 mb-3'><b>{clients.nom}</b></div>
+          )}
+          <DataTable className='table table-bordered' columns={columns} data={excelData} dense direction="auto"
+            pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
+            fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
+          />
+        </Card.Body>
       </Card>
     </div>
   );
