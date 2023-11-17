@@ -107,7 +107,7 @@ function Payments() {
       <Card className='height-100'>
         <Card.Header className='mb-2'>Payer un remboursement</Card.Header>
         <Row className='p-2'>
-          <Col>
+          <Col xs={12} sm={3} className='width-50'>
             <InputGroup className="mb-3">
               <InputGroup.Text id="ref-client">Ref Client</InputGroup.Text>
               <Form.Select aria-label="Reference client" size='sm'
@@ -121,7 +121,7 @@ function Payments() {
               </Form.Select>
             </InputGroup>
           </Col>
-          <Col>
+          <Col xs={12} sm={3} className='width-50'>
             <InputGroup className="mb-3">
               <InputGroup.Text id="ref-credit">Ref Credit</InputGroup.Text>
               <Form.Select aria-label="Reference credit" size='sm'
@@ -135,22 +135,22 @@ function Payments() {
               </Form.Select>
             </InputGroup>
           </Col>
-          <Col></Col><Col></Col>
+          <Col className='show-on-pc'></Col><Col className='show-on-pc'></Col>
         </Row>
         {selectedClient && (
           <div className='px-2'>
             <Row className='p-2'>
-              <Col>
-                <Form.Label><strong as="h5">Nom :&nbsp;</strong>{selectedClient.nom}</Form.Label><br />
-                <Form.Label><strong as="h5">Ref Client :&nbsp;</strong>{selectedClient.RefClient}</Form.Label><br />
-                <Form.Label><strong as="h5">Ref Credit :&nbsp;</strong>{selectedClient.RefCredit}</Form.Label><br />
-                <Form.Label><strong as="h5">Montant Abandonné :&nbsp;</strong>{selectedClient.MontantAbandonnee}</Form.Label><br />
+              <Col sm={6} xs={12}>
+                <Form.Label className='small'><strong>Nom :&nbsp;</strong>{selectedClient.nom}</Form.Label><br />
+                <Form.Label className='small'><strong>Ref Client :&nbsp;</strong>{selectedClient.RefClient}</Form.Label><br />
+                <Form.Label className='small'><strong>Ref Credit :&nbsp;</strong>{selectedClient.RefCredit}</Form.Label><br />
+                <Form.Label className='small'><strong>Montant Abandonné :&nbsp;</strong>{selectedClient.MontantAbandonnee}</Form.Label><br />
               </Col>
-              <Col>
-                <Form.Label><strong>Date de passage en perte :&nbsp;</strong>{selectedClient.DatePassagePerte}</Form.Label><br />
-                <Form.Label><strong>CA Responsable :&nbsp;</strong>{selectedClient.CAResponsable}</Form.Label><br />
-                <Form.Label><strong>Agence :&nbsp;</strong>{selectedClient.Agence}</Form.Label><br />
-                <Form.Label><strong>Type :&nbsp;</strong>{selectedClient.Type}</Form.Label><br />
+              <Col sm={6} xs={12}>
+                <Form.Label className='small'><strong>Date de passage en perte :&nbsp;</strong>{selectedClient.DatePassagePerte}</Form.Label><br />
+                <Form.Label className='small'><strong>CA Responsable :&nbsp;</strong>{selectedClient.CAResponsable}</Form.Label><br />
+                <Form.Label className='small'><strong>Agence :&nbsp;</strong>{selectedClient.Agence}</Form.Label><br />
+                <Form.Label className='small'><strong>Type :&nbsp;</strong>{selectedClient.Type}</Form.Label><br />
               </Col>
             </Row>
             <hr />
@@ -187,8 +187,8 @@ function Payments() {
                       size='sm' />
                   </Form.Group>
                   <div className='text-end mt-2'>
-                    <Button type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>
-                    <Button type='submit' variant="success">Enregistrer</Button>
+                    <Button xs={6} type='button' onClick={clearData} className='mx-3 display-inline' variant="danger">Annuler</Button>
+                    <Button xs={6} type='submit' className='display-inline' variant="success">Enregistrer</Button>
                   </div>
                 </Col>
               </Row>

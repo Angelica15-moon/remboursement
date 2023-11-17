@@ -7,7 +7,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
@@ -59,7 +58,7 @@ class App extends Component {
               </ListGroup>
             </Card>
           </Col>
-          <Col lg={10} sm={10} xs={12}>
+          <Col lg={10} sm={10} xs={12} className='full-width'>
             {activeMenuItem === 'insertion' && <Insertion />}
             {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
             {activeMenuItem === 'payments' && <Payments />}

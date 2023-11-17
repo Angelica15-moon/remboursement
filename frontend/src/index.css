@@ -51,6 +51,9 @@ code {
   .show-on-pc {
     display: none;
   }
+  .full-width{
+    width: 100% !important;
+  }
 }
 
 @media screen and (min-width: 1150px) {
@@ -58,6 +61,19 @@ code {
     display: none;
   }
 }
+
+@media screen and (max-width: 950px) {
+  .width-50 {
+    width: 50% !important;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .width-50 {
+    width: 100% !important;
+  }
+}
+
 .active-menu a {
   color: rgb(255, 255, 255) !important;
 }
