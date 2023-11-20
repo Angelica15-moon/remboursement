@@ -154,41 +154,41 @@ function Payments() {
               </Col>
             </Row>
             <hr />
-            <h2>Champs à saisir ....</h2>
+            <h2 className='small'>Champs à saisir ....</h2>
             <Form onSubmit={handleRemboursementSubmit}>
               <Row className='p-2'>
                 <Col>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="montantAPayer">Montant à payer :</Form.Label>
+                    <Form.Label className='small' htmlFor="montantAPayer">Montant à payer :</Form.Label>
                     <Form.Control type='number' id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
                       required size='sm' onChange={(e) => setMontantAPayer(e.target.value)} />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="datePaiement">Date de paiement :</Form.Label>
+                    <Form.Label className='small' htmlFor="datePaiement">Date de paiement :</Form.Label>
                     <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
                       value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)} />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label htmlFor="collecteur">Collecteur :</Form.Label>
+                  <Form.Group className="mb-3 full-width display-block">
+                    <Form.Label className='small' htmlFor="collecteur">Collecteur :</Form.Label>
                     <Form.Control type='text' id="collecteur" placeholder="Collecteur" required size='sm'
                       value={collecteur} onChange={(e) => setCollecteur(e.target.value)} />
                   </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="agence">Agence :</Form.Label>
-                    <Form.Control type='text' id="agence" placeholder="Agence" value={agence}
+                    <Form.Label className='small' htmlFor="agence">Agence :</Form.Label>
+                    <Form.Control className='small' type='text' id="agence" placeholder="Agence" value={agence}
                       required size='sm' onChange={(e) => setAgence(e.target.value)} />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label htmlFor="numeroFacture">Numéro de facture :</Form.Label>
+                  <Form.Group xs={12} sm={6} className="mb-3">
+                    <Form.Label className='small' htmlFor="numeroFacture">Numéro de facture :</Form.Label>
                     <Form.Control type="text" id="numeroFacture" name="numeroFacture"
                       value={numeroFacture} required onChange={(e) => setNumeroFacture(e.target.value)}
                       size='sm' />
                   </Form.Group>
                   <div className='text-end mt-2'>
-                    <Button xs={6} type='button' onClick={clearData} className='mx-3 display-inline' variant="danger">Annuler</Button>
-                    <Button xs={6} type='submit' className='display-inline' variant="success">Enregistrer</Button>
+                    <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>
+                    <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
                   </div>
                 </Col>
               </Row>

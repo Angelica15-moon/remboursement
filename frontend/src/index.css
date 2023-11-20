@@ -51,8 +51,13 @@ code {
   .show-on-pc {
     display: none;
   }
-  .full-width{
+
+  .full-width {
     width: 100% !important;
+  }
+
+  .display-block {
+    display: block !important;
   }
 }
 
@@ -66,14 +71,44 @@ code {
   .width-50 {
     width: 50% !important;
   }
+
+  .full-width {
+    width: 100% !important;
+  }
+
+  .display-block {
+    display: block !important;
+  }
 }
 
 @media screen and (max-width: 479px) {
   .width-50 {
     width: 100% !important;
   }
+
+  .full-width {
+    width: 100% !important;
+  }
+
+  .display-block {
+    display: block !important;
+  }
 }
 
 .active-menu a {
   color: rgb(255, 255, 255) !important;
+}
+
+.container-fluid button {
+  font-size: large !important;
+  border: none !important;
+}
+
+.container-fluid button:hover {
+  border: none !important;
+}
+
+.navbar-toggler {
+  box-shadow: none !important;
+  border: none !important;
 }

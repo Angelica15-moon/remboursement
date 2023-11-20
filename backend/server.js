@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const xlsx = require('xlsx');
+const { LoginService } = require('./services/LoginService');
 
 const app = express();
 
@@ -9,8 +10,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "", // Mot de passe de la base de données
+  user: "luca",
+  password: "Just$Me12", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -33,7 +34,7 @@ app.use(express.json());
  */
 function calculRestAPayer(refClient, remboursement) {
   return new Promise((resolve, reject) => {
-    let ref = refClient.split("/");
+    const ref = refClient.split("/");
     let client = 0;
     const sql_client = "SELECT c.montantAbandonnee FROM excel_data c WHERE refClient LIKE '%" + ref[1] + "%'";
     const sql_payements = "SELECT * FROM payments WHERE refClient LIKE '%" + ref[1] + "%'";
@@ -213,6 +214,18 @@ app.post('/collecteur', (req, res) => {
 
     return res.status(200).json({ message: 'Données de collecteur enregistrées avec succès.' });
   });
+});
+
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await LoginService(db, username, password);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
 });
 
 app.listen(port, () => {

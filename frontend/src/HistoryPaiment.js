@@ -53,7 +53,7 @@ function HistoriquePaiements() {
         <Card.Header className='mb-2'>Données Excel</Card.Header>
         <Card.Body className='p-2'>
           <Row className='p-2'>
-            <Col>
+            <Col xs={12} sm={6} lg={3}>
               <InputGroup className="mb-3">
                 <InputGroup.Text id="ref-client">Ref Client</InputGroup.Text>
                 <Form.Select aria-label="Reference client" size='sm'
@@ -65,8 +65,8 @@ function HistoriquePaiements() {
                 </Form.Select>
               </InputGroup>
             </Col>
-            <Col></Col>
-            <Col></Col><Col></Col>
+            <Col className='show-on-pc'></Col>
+            <Col className='show-on-pc'></Col><Col className='show-on-pc'></Col>
           </Row>
           <hr className='mb-3' />
           {clients && (

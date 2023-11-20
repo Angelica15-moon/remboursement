@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Clients from './Clients';
 import Payments from './Payments';
 import HistoryPaiment from './HistoryPaiment';
@@ -10,6 +10,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
+import Login from './components/Login';
+
 
 class App extends Component {
   constructor(props) {
@@ -32,8 +34,16 @@ class App extends Component {
     this.setState({ activeMenuItem: menuItem });
   };
 
+  getTonken() {
+    return <Login setToken={setToken} />
+  }
+
   render() {
     const { activeMenuItem, clientData } = this.state;
+
+    if (!this.getTonken()) {
+      return this.getTonken();
+    }
 
     return (
       <div className='bg-secondary height-100'>
@@ -43,10 +53,10 @@ class App extends Component {
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll">
               <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '200px' }} navbarScroll >
-              <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -57,10 +67,18 @@ class App extends Component {
               <Card.Header className='mb-4'>Cefor - GAP</Card.Header>
               <Card.Text className='px-4 mb-0 small-text' >NAVIGATION</Card.Text>
               <ListGroup variant="flush" className='mt-0 height-100' >
-                <ListGroup.Item className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''}><a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a></ListGroup.Item>
-                <ListGroup.Item className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''}><a href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a></ListGroup.Item>
-                <ListGroup.Item className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''}><a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a></ListGroup.Item>
-                <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}><a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a></ListGroup.Item>
+                <ListGroup.Item className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a>
+                </ListGroup.Item>
+                <ListGroup.Item className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a>
+                </ListGroup.Item>
+                <ListGroup.Item className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a>
+                </ListGroup.Item>
+                <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
+                </ListGroup.Item>
               </ListGroup>
             </Card>
           </Col>
