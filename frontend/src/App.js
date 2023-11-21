@@ -35,14 +35,14 @@ class App extends Component {
   };
 
   getTonken() {
-    return <Login />
+    return !!localStorage.getItem('token');
   }
 
   render() {
     const { activeMenuItem, clientData } = this.state;
 
-    if (this.getTonken()) {
-      return this.getTonken();
+    if (!this.getTonken()) {
+      return <Login></Login>;
     }
 
     return (

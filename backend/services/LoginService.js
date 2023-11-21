@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { hashPassword, comparePassword } = require('./ApplicationConfig');
 require('dotenv').config();
 
 /**
@@ -29,11 +30,14 @@ function LoginService(db, username, password) {
                 });
             }
 
-            if (results.length && password !== results[0].password) {
-                reject({
-                    code: 401,
-                    message: "Invalid credentials"
-                });
+            if (results.length) {
+                const passwordHashed = hashPassword(results[0].password);
+                if (comparePassword(password, passwordHashed)) {
+                    reject({
+                        code: 401,
+                        message: "Invalid credentials"
+                    });
+                }
             }
 
             let data = {
