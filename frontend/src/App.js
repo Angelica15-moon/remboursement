@@ -35,13 +35,13 @@ class App extends Component {
   };
 
   getTonken() {
-    return <Login setToken={setToken} />
+    return <Login />
   }
 
   render() {
     const { activeMenuItem, clientData } = this.state;
 
-    if (!this.getTonken()) {
+    if (this.getTonken()) {
       return this.getTonken();
     }
 
