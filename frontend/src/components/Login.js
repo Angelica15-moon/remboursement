@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useNavigate } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import axios from 'axios';
 import './Login.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
 
@@ -11,19 +10,27 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const loginUser = async (e) => {
-        e.preventDefault();
-        try{
-            const response = await axios.post('http://localhost:3002/login',
-                JSON.stringify({username: username, password: password})
-            );
-            setTokenStorage(response.data);
+    const loginUser = () => {
+
+        fetch('http://localhost:3002/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: username, password: password}),
+        }).then((response) => response.json())
+            .then((data) => {
+            if (data.code) {
+                setErrorMessage(data.message);
+            }else {
+                setTokenStorage(data);
+                setErrorMessage("");
+                window.location.reload();
+            }
             setUsername(""); 
-            setPassword("");
-            setErrorMessage("");
-        } catch (error) {
+            setPassword("");  
+        }).catch((error) => {
+            console.log(error);
             setErrorMessage(error.response.data.message);
-        }
+        });
     }
 
     function setTokenStorage(response){
@@ -31,14 +38,12 @@ export default function Login() {
         localStorage.setItem('user', response.username);
     }
 
-    function clearData() {
-        setUsername("");
-        setPassword("");
-        setErrorMessage("");
+    function goToResistration() {
+        
     }
 
     return (
-        <div className="login-wrapper m-5">
+        <div className="m-5">
             <Card>
                 <Card.Header className='text-center' >Connexion</Card.Header>
                 <Card.Body className='p-3'>
@@ -57,7 +62,7 @@ export default function Login() {
                                 required size='sm' onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
                         <div className='text-end mt-2'>
-                            <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">s'inscrire</Button>
+                            <Button xs={6} type='button' onClick={goToResistration} className='mx-3' variant="danger">s'inscrire</Button>
                             <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
                         </div>
                     </Form>

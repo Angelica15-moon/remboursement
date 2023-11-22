@@ -10,8 +10,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "luca",
-  password: "Just$Me12", // Mot de passe de la base de données
+  user: "root",
+  password: "", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -218,10 +218,20 @@ app.post('/collecteur', (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const result = await LoginService(db, username, password);
     return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+});
+
+app.post("/resistration", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    //const result = await LoginService(db, username, password);
+    return res.status(200).json("ok");
   } catch (error) {
     console.error(error);
     return res.status(error.code).json(error);

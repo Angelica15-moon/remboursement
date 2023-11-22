@@ -38,6 +38,10 @@ class App extends Component {
     return !!localStorage.getItem('token');
   }
 
+  logout() {
+    localStorage.clear();
+  }
+
   render() {
     const { activeMenuItem, clientData } = this.state;
 
@@ -78,6 +82,9 @@ class App extends Component {
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
+                </ListGroup.Item>
+                <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={this.logout()}>Déconection</a>
                 </ListGroup.Item>
               </ListGroup>
             </Card>
