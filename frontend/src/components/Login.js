@@ -1,9 +1,10 @@
-import { useState, useNavigate } from 'react';
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './Login.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
+import Inscription from './inscription/Inscription';
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -14,32 +15,33 @@ export default function Login() {
 
         fetch('http://localhost:3002/login', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({username: username, password: password}),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, password: password }),
         }).then((response) => response.json())
             .then((data) => {
-            if (data.code) {
-                setErrorMessage(data.message);
-            }else {
-                setTokenStorage(data);
-                setErrorMessage("");
-                window.location.reload();
-            }
-            setUsername(""); 
-            setPassword("");  
-        }).catch((error) => {
-            console.log(error);
-            setErrorMessage(error.response.data.message);
-        });
+                if (data.code) {
+                    setErrorMessage(data.message);
+                } else {
+                    console.log(data);
+                    setTokenStorage(data);
+                    setErrorMessage("");
+                }
+                setUsername("dfg");
+                setPassword("dfgfh");
+            }).catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+            });
     }
 
-    function setTokenStorage(response){
+    function setTokenStorage(response) {
+        console.log(response.token);
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', response.username);
     }
 
-    function goToResistration() {
-        
+    const goToResistration = () => {
+        return <inscription></inscription>
     }
 
     return (

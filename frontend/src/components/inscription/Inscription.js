@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/esm/Col';
 import Resistration from '../../services/ResitrationService';
 
 
-export default function inscription() {
+export default function C() {
     const [error, setErrorMessage] = useState();
     const [user, setUtilisateur] = useState([]);
     const [nom, setNom] = useState("");
@@ -22,27 +22,27 @@ export default function inscription() {
     const [role, setRole] = useState("");
     const [username, setUsername] = useState("");
 
-    const handleUserFormSubimt = (e) =>{
+    const handleUserFormSubimt = (e) => {
         e.preventDefault();
         if (password !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
-        }else {
+        } else {
             setUtilisateur(new Utilisateur(nom, prenom, adresse, username, password, email, tel, role));
             Resistration(user);
         }
     }
 
-    const handleRoleChange  = (e) => {
+    const handleRoleChange = (e) => {
         const selectedRefValue = e.target.value;
         setRole(selectedRefValue);
-      }
+    }
 
     return (
         <div>
             <Card>
                 <Card.Header>S'inscrire</Card.Header>
                 <Card.Body>
-                <Form onSubmit={handleUserFormSubimt}>
+                    <Form onSubmit={handleUserFormSubimt}>
                         <Row>
                             <Col>
                                 <Form.Group className="mb-3">
@@ -80,7 +80,7 @@ export default function inscription() {
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="role">Role</Form.Label>
                                     <Form.Select aria-label="Role" size='sm' id='role'
-                                        value={selectedRef} aria-describedby="role" onChange={handleRoleChange}>
+                                        value={role} aria-describedby="role" onChange={handleRoleChange}>
                                         <option value="">Ref Client</option>
                                         <option value="admin">Adimn</option>
                                         <option value="agent">Agent</option>
@@ -102,7 +102,7 @@ export default function inscription() {
                             </Col>
                         </Row>
                         <div className='text-end mt-2'>
-                            <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">Login</Button>
+                            <Button xs={6} type='button' className='mx-3' variant="danger">Login</Button>
                             <Button type='submit' className='display-inline' variant="success">S'inscrire</Button>
                         </div>
                     </Form>
@@ -110,12 +110,10 @@ export default function inscription() {
             </Card>
         </div>
     );
-
-
 }
 
 class Utilisateur {
-    constructor(nom, prenom, adresse, username, password, email, tel, role){
+    constructor(nom, prenom, adresse, username, password, email, tel, role) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;

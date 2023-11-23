@@ -25,7 +25,6 @@ function HistoriquePaiements() {
 
   const handleRefChange = (e) => {
     const selectedRefValue = e.target.value;
-    const datep = new Date();
     setSelectedRef(selectedRefValue);
     const client = excelData.find((c) => c.RefClient === selectedRefValue);
     setClients(client);

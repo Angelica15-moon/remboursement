@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import Clients from './Clients';
 import Payments from './Payments';
 import HistoryPaiment from './HistoryPaiment';
@@ -36,10 +36,6 @@ class App extends Component {
 
   getTonken() {
     return !!localStorage.getItem('token');
-  }
-
-  logout() {
-    localStorage.clear();
   }
 
   render() {
@@ -84,7 +80,7 @@ class App extends Component {
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
-                  <a href="#" onClick={this.logout()}>Déconection</a>
+                  <a href="#">Déconection</a>
                 </ListGroup.Item>
               </ListGroup>
             </Card>
