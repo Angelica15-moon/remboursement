@@ -30,6 +30,11 @@ class App extends Component {
     return !!localStorage.getItem('token');
   }
 
+  logout(){
+    localStorage.clear();
+    window.location.reload();
+  }
+
   render() {
     const { activeMenuItem, clientData } = this.state;
 
@@ -49,6 +54,7 @@ class App extends Component {
                 <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
+                <Nav.Link href="#" className='p-0 px-2 small' onClick={() => this.logout()}>Déconnection</Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </Container>
@@ -70,6 +76,9 @@ class App extends Component {
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <a href="#" onClick={() => this.logout()}>Déconnection</a>
                 </ListGroup.Item>
               </ListGroup>
             </Card>
