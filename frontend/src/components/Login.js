@@ -4,7 +4,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './Login.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
-import Inscription from './inscription/Inscription';
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -39,12 +38,8 @@ export default function Login() {
         window.location.reload();
     }
 
-    function goToResistration(){
-        return <Inscription></Inscription>
-    }
-
     return (
-        <div className="m-5">
+        <div className="m-5 p-5">
             <Card>
                 <Card.Header className='text-center'>Connexion</Card.Header>
                 <Card.Body className='p-3'>
@@ -63,7 +58,6 @@ export default function Login() {
                                 required size='sm' onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
                         <div className='text-end mt-2'>
-                            <Button xs={6} type='button' onClick={(e) => goToResistration()} className='mx-3' variant="danger">s'inscrire</Button>
                             <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
                         </div>
                     </Form>

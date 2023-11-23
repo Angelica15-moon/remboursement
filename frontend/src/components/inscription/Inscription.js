@@ -8,10 +8,9 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Resistration from '../../services/ResitrationService';
 
-
 export default function C() {
     const [error, setErrorMessage] = useState();
-    const [user, setUtilisateur] = useState([]);
+    const [user, setUtilisateur] = useState(null);
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
     const [adresse, setAdresse] = useState("");
@@ -27,8 +26,19 @@ export default function C() {
         if (password !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
         } else {
-            setUtilisateur(new Utilisateur(nom, prenom, adresse, username, password, email, tel, role));
-            Resistration(user);
+            const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role)
+            setUtilisateur(agent);
+            fetch('http://localhost:3002/resistration', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user),
+        }).then((response) => response.json())
+            .then((data) => {
+                
+            }).catch((error) => {
+                console.log(error);
+                setErrorMessage(error.message);
+            });
         }
     }
 
@@ -37,10 +47,23 @@ export default function C() {
         setRole(selectedRefValue);
     }
 
+    function clearData(params) {
+        setErrorMessage("");
+        setNom("");
+        setPrenom("");
+        setAdresse("");
+        setEmail("");
+        setTelephone("");
+        setPassword("");
+        setCPassword("");
+        setUsername("");
+        setUtilisateur(null);
+    }
+
     return (
-        <div>
+        <div className='p-3'>
             <Card>
-                <Card.Header>S'inscrire</Card.Header>
+                <Card.Header>Créer un agent / Collecteur</Card.Header>
                 <Card.Body>
                     <Form onSubmit={handleUserFormSubimt}>
                         <Row>
@@ -52,48 +75,48 @@ export default function C() {
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="prenom">Prenom</Form.Label>
-                                    <Form.Control type='text' id="prenom" placeholder="Prenom" value={password}
+                                    <Form.Control type='text' id="prenom" placeholder="Prenom" value={prenom}
                                         required size='sm' onChange={(e) => setPrenom(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="adresse">adresse</Form.Label>
-                                    <Form.Control type='text' id="adresse" placeholder="Adresse" value={password}
+                                    <Form.Control type='text' id="adresse" placeholder="Adresse" value={adresse}
                                         required size='sm' onChange={(e) => setAdresse(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="email">E-mail</Form.Label>
-                                    <Form.Control type='mail' id="email" placeholder="email" value={password}
+                                    <Form.Control type='email' id="email" placeholder="email" value={email}
                                         required size='sm' onChange={(e) => setEmail(e.target.value)} />
                                 </Form.Group>
                             </Col>
                             <Col>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="tel">Téléphone</Form.Label>
-                                    <Form.Control type='text' id="tel" placeholder="tel" value={nom}
+                                    <Form.Control type='text' id="tel" placeholder="tel" value={tel}
                                         required size='sm' onChange={(e) => setTelephone(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="username">Nom d'utilisateur</Form.Label>
-                                    <Form.Control type='text' id="username" placeholder="Nom d'utilisateur" value={password}
+                                    <Form.Control type='text' id="username" placeholder="Nom d'utilisateur" value={username}
                                         required size='sm' onChange={(e) => setUsername(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="role">Role</Form.Label>
                                     <Form.Select aria-label="Role" size='sm' id='role'
                                         value={role} aria-describedby="role" onChange={handleRoleChange}>
-                                        <option value="">Ref Client</option>
+                                        <option value="">Role utilisateur</option>
                                         <option value="admin">Adimn</option>
                                         <option value="agent">Agent</option>
                                     </Form.Select>
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="password">Mot de passe</Form.Label>
-                                    <Form.Control type='password' id="email" placeholder="password" value={password}
+                                    <Form.Control type='password' id="password" placeholder="password" value={password}
                                         required size='sm' onChange={(e) => setPassword(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="cpassword">Confirmer</Form.Label>
-                                    <Form.Control type='password' id="cpassword" placeholder="Confirmer le mot de passe" value={password}
+                                    <Form.Control type='password' id="cpassword" placeholder="Confirmer le mot de passe" value={cpassword}
                                         required size='sm' onChange={(e) => setCPassword(e.target.value)} />
                                 </Form.Group>
                                 {error && (
@@ -102,8 +125,8 @@ export default function C() {
                             </Col>
                         </Row>
                         <div className='text-end mt-2'>
-                            <Button xs={6} type='button' className='mx-3' variant="danger">Login</Button>
-                            <Button type='submit' className='display-inline' variant="success">S'inscrire</Button>
+                            <Button xs={6} type='button' onClick={(e) => clearData()} className='mx-3' variant="danger">Annuler</Button>
+                            <Button type='submit' className='display-inline' variant="success">Valider</Button>
                         </div>
                     </Form>
                 </Card.Body>
