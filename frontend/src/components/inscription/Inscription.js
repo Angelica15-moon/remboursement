@@ -6,7 +6,6 @@ import './inscription.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
-import Resistration from '../../services/ResitrationService';
 
 export default function C() {
     const [error, setErrorMessage] = useState();
@@ -34,7 +33,7 @@ export default function C() {
             body: JSON.stringify(user),
         }).then((response) => response.json())
             .then((data) => {
-                
+
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
