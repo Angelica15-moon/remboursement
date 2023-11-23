@@ -9,7 +9,6 @@ import Col from 'react-bootstrap/esm/Col';
 
 export default function C() {
     const [error, setErrorMessage] = useState();
-    const [user, setUtilisateur] = useState(null);
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
     const [adresse, setAdresse] = useState("");
@@ -25,15 +24,13 @@ export default function C() {
         if (password !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
         } else {
-            const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role)
-            setUtilisateur(agent);
+            const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role);
             fetch('http://localhost:3002/resistration', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(user),
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(agent),
         }).then((response) => response.json())
             .then((data) => {
-
+                console.log(data);
             }).catch((error) => {
                 console.log(error);
                 setErrorMessage(error.message);
@@ -56,7 +53,6 @@ export default function C() {
         setPassword("");
         setCPassword("");
         setUsername("");
-        setUtilisateur(null);
     }
 
     return (

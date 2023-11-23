@@ -3,6 +3,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
+const { RegistrationServices } = require("./services/RegistrationServices");
 
 const app = express();
 
@@ -228,10 +229,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/resistration", async (req, res) => {
-  const { username, password } = req.body;
+  const agent = req.body;
   try {
-    //const result = await LoginService(db, username, password);
-    return res.status(200).json("ok");
+    const result = await RegistrationServices(db, agent);
+    return res.status(200).json(result);
   } catch (error) {
     console.error(error);
     return res.status(error.code).json(error);
