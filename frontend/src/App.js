@@ -22,14 +22,6 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    // Récupération des données clients depuis votre API ou base de données ici
-    fetch('/clients')
-      .then((response) => response.json())
-      .then((data) => this.setState({ clientData: data }))
-      .catch((error) => console.error('Erreur lors de la récupération des données :', error));
-  }
-
   handleMenuItemClick = (menuItem) => {
     this.setState({ activeMenuItem: menuItem });
   };
@@ -78,9 +70,6 @@ class App extends Component {
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
-                </ListGroup.Item>
-                <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
-                  <a href="#">Déconection</a>
                 </ListGroup.Item>
               </ListGroup>
             </Card>

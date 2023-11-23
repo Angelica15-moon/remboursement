@@ -11,7 +11,8 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const loginUser = () => {
+    const loginUser = (e) => {
+        e.preventDefault();
 
         fetch('http://localhost:3002/login', {
             method: 'POST',
@@ -22,32 +23,30 @@ export default function Login() {
                 if (data.code) {
                     setErrorMessage(data.message);
                 } else {
-                    console.log(data);
                     setTokenStorage(data);
                     setErrorMessage("");
                 }
-                setUsername("dfg");
-                setPassword("dfgfh");
+                setUsername("");
+                setPassword("");
             }).catch((error) => {
-                console.log(error);
                 setErrorMessage(error.message);
             });
     }
 
     function setTokenStorage(response) {
-        console.log(response.token);
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', response.username);
+        window.location.reload();
     }
 
-    const goToResistration = () => {
-        return <inscription></inscription>
+    function goToResistration(params){
+        return <Inscription></Inscription>
     }
 
     return (
         <div className="m-5">
             <Card>
-                <Card.Header className='text-center' >Connexion</Card.Header>
+                <Card.Header className='text-center'>Connexion</Card.Header>
                 <Card.Body className='p-3'>
                     {errorMessage && (
                         <FormLabel className='text-danger'>{errorMessage}</FormLabel>
