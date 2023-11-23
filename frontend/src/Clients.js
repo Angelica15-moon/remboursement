@@ -113,7 +113,7 @@ function ClientList() {
         <DataTable
           columns={columns} data={clientList} dense direction="auto" pagination
           paginationComponentOptions={paginationComponentOptions}
-          fixedHeader fixedHeaderScrollHeight="450px" highlightOnHover ointerOnHover
+          fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
           persistTableHead responsive
         />
       </Card>

@@ -60,11 +60,11 @@ class App extends Component {
           </Container>
         </Navbar>
         <Row>
-          <Col lg={2} sm={2} xs={12}>
+          <Col lg={2} sm={2} xs={12} className='m-0 p-0'>
             <Card className='show-on-pc'>
               <Card.Header className='mb-4'>Cefor - GAP</Card.Header>
               <Card.Text className='px-4 mb-0 small-text' >NAVIGATION</Card.Text>
-              <ListGroup variant="flush" className='mt-0 height-100' >
+              <ListGroup variant="flush" className='mt-0 p-2 height-100' >
                 <ListGroup.Item className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a>
                 </ListGroup.Item>
@@ -83,7 +83,7 @@ class App extends Component {
               </ListGroup>
             </Card>
           </Col>
-          <Col lg={10} sm={10} xs={12} className='full-width'>
+          <Col lg={10} sm={10} xs={12} className='full-width m-0 p-0'>
             {activeMenuItem === 'insertion' && <Insertion />}
             {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
             {activeMenuItem === 'payments' && <Payments />}
