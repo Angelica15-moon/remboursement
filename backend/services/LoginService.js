@@ -31,8 +31,8 @@ function LoginService(db, username, password) {
             }
 
             if (results.length) {
-                const passwordHashed = hashPassword(results[0].password);
-                if (password !== results[0].password) {
+                const passwordHashed = hashPassword(password);
+                if (!comparePassword(passwordHashed, results[0].password)) {
                     reject({
                         code: 401,
                         message: "Invalid credentials"
