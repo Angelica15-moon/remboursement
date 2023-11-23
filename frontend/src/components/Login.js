@@ -39,7 +39,7 @@ export default function Login() {
         window.location.reload();
     }
 
-    function goToResistration(params){
+    function goToResistration(){
         return <Inscription></Inscription>
     }
 
@@ -63,7 +63,7 @@ export default function Login() {
                                 required size='sm' onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
                         <div className='text-end mt-2'>
-                            <Button xs={6} type='button' onClick={goToResistration} className='mx-3' variant="danger">s'inscrire</Button>
+                            <Button xs={6} type='button' onClick={(e) => goToResistration()} className='mx-3' variant="danger">s'inscrire</Button>
                             <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
                         </div>
                     </Form>
