@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { hashPassword, comparePassword } = require('./ApplicationConfig');
+const { comparePassword } = require('./ApplicationConfig');
 require('dotenv').config();
 
 /**

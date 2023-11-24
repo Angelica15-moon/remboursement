@@ -83,10 +83,10 @@ class App extends Component {
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Accordion sm>
-                    <Accordion.Item eventKey="0" fluid flush>
-                      <Accordion.Header>Parametres</Accordion.Header>
-                      <Accordion.Body className='m-0 p-0 small'>
+                  <Accordion className='full-width small' sm>
+                    <Accordion.Item eventKey="0" flush>
+                      <Accordion.Header className='small-text m-0 p-0'>Parametres</Accordion.Header>
+                      <Accordion.Body className='m-0 p-0'>
                         <ListGroup variant="flush" className='mt-0 p-0'>
                           <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>

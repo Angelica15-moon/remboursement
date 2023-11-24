@@ -4,6 +4,7 @@ const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
+const { getAllUsers, changerMotDePasse } = require('./services/UserServices');
 
 const app = express();
 
@@ -11,8 +12,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "", // Mot de passe de la base de données
+  user: "luca",
+  password: "Just$Me12", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -201,20 +202,29 @@ app.get('/historique-paiements', (req, res) => {
     return res.status(200).json(results);
   });
 });
-app.post('/collecteur', (req, res) => {
-  const { username, password } = req.body;
 
-  // Insérez les données dans la table 'collecteur'
-  const insertQuery = 'INSERT INTO collecteur (username, password) VALUES (?, ?)';
+app.get('/collecteur', async (req, res) => {
 
-  db.query(insertQuery, [username, password], (err, result) => {
-    if (err) {
-      console.error('Erreur lors de l\'insertion des données de collecteur :', err);
-      return res.status(500).json({ error: "Erreur lors de l'insertion des données de collecteur." });
-    }
+  try {
+    const result = await getAllUsers(db);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
 
-    return res.status(200).json({ message: 'Données de collecteur enregistrées avec succès.' });
-  });
+});
+
+app.post('/change-password', async (req, res) => {
+  const data = req.body;
+  try {
+    const result = await changerMotDePasse(db, data);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+
 });
 
 app.post("/login", async (req, res) => {

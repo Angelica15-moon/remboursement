@@ -1,63 +1,95 @@
 import { useState, useMemo } from 'react';
 import './PageUtilisateur.css';
 import DataTable from 'react-data-table-component';
-import FormLabel from 'react-bootstrap/esm/FormLabel';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 export default function PageUtilisateur() {
-    const [excelData, setExcelData] = useState([]);
+    const [usersList, setUsers] = useState([]);
+    const [error, setErrorMessage] = useState();
     const [filterText, setFilterText] = useState('');
-	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
+
+    fetch('http://localhost:3002/collecteur', {
+        method: 'GET', headers: { 'Content-Type': 'application/json' }
+    }).then((response) => response.json())
+        .then((data) => {
+            setUsers(data.results);
+        }).catch((error) => {
+            setErrorMessage(error.message);
+        });
+
+    const listUtilisateur = usersList.map(user => new User(
+        user.nom, user.prenom, user.adresse,
+        user.email, user.tel, user.active ? "Active" : "Desactiver"
+    ));
 
     const columns = [
-        { name: 'Nom', selector: row => row.RefCredit, sortable: true },
-        { name: 'prenom', selector: row => row.DatePassagePerte, sortable: true },
-        { name: 'Adresse', selector: row => row.MontantAbandonnee, sortable: true },
-        { name: 'Téléphone', selector: row => row.MontantAbandonnee, sortable: true },
-        { name: 'e-mail', selector: row => row.Agence, sortable: true },
-        { name: '...', selector: row => row.Agence, sortable: true }
-      ];
-    
-      const paginationComponentOptions = {
+        { name: 'Nom', selector: row => row.nom, sortable: true },
+        { name: 'prenom', selector: row => row.prenom, sortable: true },
+        { name: 'Adresse', selector: row => row.adresse, sortable: true },
+        { name: 'Téléphone', selector: row => row.tel, sortable: true },
+        { name: 'E-mail', selector: row => row.email, sortable: true },
+        { name: 'Active', selector: row => row.active, sortable: true },
+        { name: '...', selector: row => row.Agence }
+    ];
+
+    const paginationComponentOptions = {
         rowsPerPageText: 'Lignes par page',
         rangeSeparatorText: 'sur',
         selectAllRowsItem: true,
         selectAllRowsItemText: 'Tous',
-      };
-      const filteredItems = excelData.filter(
-		item => item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase()),
-	    );
+    };
 
-        const subHeaderComponentMemo = useMemo(() => {
-            const handleClear = () => {
-                if (filterText) {
-                    setResetPaginationToggle(!resetPaginationToggle);
-                    setFilterText('');
-                }
-            };
-    
-            return (
-                <Form.Control sm onChange={e => setFilterText(e.target.value)} filterText={filterText} />
-            );
-        }, [filterText, resetPaginationToggle]);
+    const filteredItems = listUtilisateur.filter(
+        item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.prenom && item.prenom.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.adresse && item.adresse.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.tel && item.tel.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.email && item.email.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.active && item.active.toLowerCase().includes(filterText.toLowerCase())),
+    );
+
+    const subHeaderComponentMemo = useMemo(() => {
+        return (
+            <Row>
+                <Col>
+                    <InputGroup className="mb-3" size='sm'>
+                        <Form.Control size='sm'
+                            onChange={e => setFilterText(e.target.value)} placeholder="Rechercher"
+                            aria-label="Rechercher" aria-describedby="rechercher" />
+                        <InputGroup.Text id="rechercher">Rechercher</InputGroup.Text>
+                    </InputGroup>
+                </Col>
+            </Row>
+        );
+    });
 
     return (
         <div className='p-3 pt-0'>
             <Card>
                 <Card.Header>Liste des utilisateurs</Card.Header>
                 <Card.Body>
-                    <DataTable className='table table-bordered' columns={columns} data={excelData} dense direction="auto"
+                    <DataTable className='table table-bordered' data={filteredItems} columns={columns} dense direction="auto"
                         pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
                         fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
-                        subHeader
-			            subHeaderComponent={subHeaderComponentMemo}
+                        subHeader subHeaderComponent={subHeaderComponentMemo}
                     />
                 </Card.Body>
             </Card>
         </div>
     );
+}
+
+class User {
+    constructor(nom, prenom, adresse, email, tel, active) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.email = email;
+        this.tel = tel;
+        this.active = active
+    }
 }
