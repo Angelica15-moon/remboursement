@@ -13,6 +13,8 @@ import Container from 'react-bootstrap/Container';
 import Login from './components/Login';
 import Inscription from './components/inscription/Inscription';
 import Accordion from 'react-bootstrap/Accordion';
+import PageUtilisateur from './components/utilisateur/page-utilisateur/PageUtilisateur'
+import ChangerMotDePasse from './components/utilisateur/changer-mot-de-passe/ChangerMotDePasse';
 
 
 class App extends Component {
@@ -41,7 +43,7 @@ class App extends Component {
     const { activeMenuItem, clientData } = this.state;
 
     if (!this.getTonken()) {
-      return <Login></Login>;
+      return <Login className='p-4'></Login>;
     }
 
     return (
@@ -84,16 +86,16 @@ class App extends Component {
                   <Accordion sm>
                     <Accordion.Item eventKey="0" fluid flush>
                       <Accordion.Header>Parametres</Accordion.Header>
-                      <Accordion.Body className='m-0 p-0'>
+                      <Accordion.Body className='m-0 p-0 small'>
                         <ListGroup variant="flush" className='mt-0 p-0'>
+                          <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
+                            <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>
+                          </ListGroup.Item>
                           <ListGroup.Item className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</a>
                           </ListGroup.Item>
                           <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
-                          </ListGroup.Item>
-                          <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
-                            <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>
                           </ListGroup.Item>
                           <ListGroup.Item className={activeMenuItem === 'Changer-mdp' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('Changer-mdp')}>Changer mdp</a>
@@ -114,10 +116,10 @@ class App extends Component {
             {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
             {activeMenuItem === 'payments' && <Payments />}
             {activeMenuItem === 'historyPaiment' && <HistoryPaiment />}
-            {activeMenuItem === 'inscription' && <Inscription />}
-            {activeMenuItem === 'utilisateurs' && <Inscription />}
             {activeMenuItem === 'profil' && <Inscription />}
-            {activeMenuItem === 'Changer-mdp' && <Inscription />}
+            {activeMenuItem === 'utilisateurs' && <PageUtilisateur />}
+            {activeMenuItem === 'inscription' && <Inscription />}
+            {activeMenuItem === 'Changer-mdp' && <ChangerMotDePasse />}
           </Col>
         </Row>
       </div>

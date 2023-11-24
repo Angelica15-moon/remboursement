@@ -103,7 +103,7 @@ function Payments() {
   }
 
   return (
-    <div className='p-3'>
+    <div className='p-3 pt-0'>
       <Card className='height-100'>
         <Card.Header className='mb-2'>Payer un remboursement</Card.Header>
         <Row className='p-2'>

@@ -47,7 +47,7 @@ function HistoriquePaiements() {
   };
 
   return (
-    <div className='p-3'>
+    <div className='p-3 pt-0'>
       <Card>
         <Card.Header className='mb-2'>Données Excel</Card.Header>
         <Card.Body className='p-2'>

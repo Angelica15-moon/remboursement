@@ -74,7 +74,7 @@ function ClientList() {
     }
   */
   return (
-    <div className='p-3'>
+    <div className='p-3 pt-0'>
       <Card>
         <Card.Header>Liste des Clients</Card.Header>
         <Row className='mb-3 px-3'>
@@ -110,12 +110,14 @@ function ClientList() {
             />
           </Col>
         </Row>
-        <DataTable
-          columns={columns} data={clientList} dense direction="auto" pagination
-          paginationComponentOptions={paginationComponentOptions}
-          fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
-          persistTableHead responsive
-        />
+        <div className='p-3'>
+          <DataTable
+            columns={columns} data={clientList} dense direction="auto" pagination
+            paginationComponentOptions={paginationComponentOptions}
+            fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
+            persistTableHead responsive
+          />
+        </div>
       </Card>
     </div>
   );

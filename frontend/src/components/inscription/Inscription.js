@@ -56,7 +56,7 @@ export default function Inscription() {
     }
 
     return (
-        <div className='p-3'>
+        <div className='p-3 pt-0'>
             <Card>
                 <Card.Header>Créer un agent / Collecteur</Card.Header>
                 <Card.Body>

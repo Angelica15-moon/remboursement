@@ -58,7 +58,7 @@ export default function Login() {
                                 required size='sm' onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
                         <div className='text-end mt-2'>
-                            <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
+                            <Button type='submit' className='display-inline' variant="success">S'identifier</Button>
                         </div>
                     </Form>
                 </Card.Body>
