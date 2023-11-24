@@ -7,7 +7,7 @@ import FormLabel from 'react-bootstrap/esm/FormLabel';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 
-export default function C() {
+export default function Inscription() {
     const [error, setErrorMessage] = useState();
     const [nom, setNom] = useState("");
     const [prenom, setPrenom] = useState("");
