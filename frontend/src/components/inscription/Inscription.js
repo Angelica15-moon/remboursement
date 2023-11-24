@@ -26,15 +26,15 @@ export default function C() {
         } else {
             const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role);
             fetch('http://localhost:3002/resistration', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(agent),
-        }).then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            }).catch((error) => {
-                console.log(error);
-                setErrorMessage(error.message);
-            });
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(agent),
+            }).then((response) => response.json())
+                .then((data) => {
+                    clearData(data);
+                    window.location.reload();
+                }).catch((error) => {
+                    setErrorMessage(error.message);
+                });
         }
     }
 

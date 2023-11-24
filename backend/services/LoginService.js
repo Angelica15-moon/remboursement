@@ -30,9 +30,16 @@ function LoginService(db, username, password) {
                 });
             }
 
+            if (!results[0].active) {
+                reject({
+                    code: 402,
+                    message: "Votre compte a ete desactive, veuillez contactez votre administrateur."
+                });
+            }
+
             if (results.length) {
-                const passwordHashed = hashPassword(password);
-                if (!comparePassword(passwordHashed, results[0].password)) {
+
+                if (!comparePassword(password, results[0].password)) {
                     reject({
                         code: 401,
                         message: "Invalid credentials"

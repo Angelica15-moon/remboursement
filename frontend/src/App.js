@@ -31,7 +31,7 @@ class App extends Component {
     return !!localStorage.getItem('token');
   }
 
-  logout(){
+  logout() {
     localStorage.clear();
     window.location.reload();
   }
@@ -79,7 +79,7 @@ class App extends Component {
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
                 </ListGroup.Item>
-                <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
+                <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
                 </ListGroup.Item>
                 <ListGroup.Item>
