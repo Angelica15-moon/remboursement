@@ -6,6 +6,9 @@ import Col from 'react-bootstrap/esm/Col';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function PageUtilisateur() {
     const [usersList, setUsers] = useState([]);
@@ -21,9 +24,22 @@ export default function PageUtilisateur() {
             setErrorMessage(error.message);
         });
 
+    function setAction(username) {
+        return (
+            <Button variant='danger' size='sm' onClick={() => desactiveUser(username)}>
+                <FontAwesomeIcon icon={faTrash} />
+            </Button>
+        );
+    }
+
+    function desactiveUser(username) {
+        alert(username);
+    }
+
     const listUtilisateur = usersList.map(user => new User(
         user.nom, user.prenom, user.adresse,
-        user.email, user.tel, user.active ? "Active" : "Desactiver"
+        user.email, user.tel, user.active ? "Active" : "Desactiver",
+        setAction(user.username)
     ));
 
     const columns = [
@@ -33,7 +49,7 @@ export default function PageUtilisateur() {
         { name: 'Téléphone', selector: row => row.tel, sortable: true },
         { name: 'E-mail', selector: row => row.email, sortable: true },
         { name: 'Active', selector: row => row.active, sortable: true },
-        { name: '...', selector: row => row.Agence }
+        { name: '...', selector: row => row.action }
     ];
 
     const paginationComponentOptions = {
@@ -84,12 +100,13 @@ export default function PageUtilisateur() {
 }
 
 class User {
-    constructor(nom, prenom, adresse, email, tel, active) {
+    constructor(nom, prenom, adresse, email, tel, active, action) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
         this.email = email;
         this.tel = tel;
-        this.active = active
+        this.active = active;
+        this.action = action;
     }
 }
