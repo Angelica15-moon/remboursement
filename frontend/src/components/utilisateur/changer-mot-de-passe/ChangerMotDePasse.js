@@ -27,11 +27,15 @@ export default function ChangerMotDePasse() {
                 <Card.Body>
                     <Row>
                         <Col sm={6} xs={12}>
-                            <Form.Label className='small'><strong>Nom :&nbsp;</strong>{utilisateur.nom}</Form.Label><br />
-                            <Form.Label className='small'><strong>Prenom :&nbsp;</strong>{utilisateur.prenom}</Form.Label><br />
-                            <Form.Label className='small'><strong>Aresse :&nbsp;</strong>{utilisateur.adresse}</Form.Label><br />
-                            <Form.Label className='small'><strong>Telephone :&nbsp;</strong>{utilisateur.tel}</Form.Label><br />
-                            <Form.Label className='small'><strong>E-mail :&nbsp;</strong>{utilisateur.email}</Form.Label><br />
+                            {utilisateur && (
+                                <div className='px-2'>
+                                    <Form.Label className='small'><strong>Nom :&nbsp;</strong>{utilisateur.nom}</Form.Label><br />
+                                    <Form.Label className='small'><strong>Prenom :&nbsp;</strong>{utilisateur.prenom}</Form.Label><br />
+                                    <Form.Label className='small'><strong>Aresse :&nbsp;</strong>{utilisateur.adresse}</Form.Label><br />
+                                    <Form.Label className='small'><strong>Telephone :&nbsp;</strong>{utilisateur.tel}</Form.Label><br />
+                                    <Form.Label className='small'><strong>E-mail :&nbsp;</strong>{utilisateur.email}</Form.Label><br />
+                                </div>
+                            )}
                         </Col>
                         <Col sm={6} xs={12}>
 
@@ -39,6 +43,6 @@ export default function ChangerMotDePasse() {
                     </Row>
                 </Card.Body>
             </Card>
-        </div>
+        </div >
     );
 }
