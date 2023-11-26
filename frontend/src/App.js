@@ -15,6 +15,7 @@ import Inscription from './components/inscription/Inscription';
 import Accordion from 'react-bootstrap/Accordion';
 import PageUtilisateur from './components/utilisateur/page-utilisateur/PageUtilisateur'
 import ChangerMotDePasse from './components/utilisateur/changer-mot-de-passe/ChangerMotDePasse';
+import PageProfil from './components/utilisateur/page-profil/PageProfil.js';
 
 
 class App extends Component {
@@ -116,7 +117,7 @@ class App extends Component {
             {activeMenuItem === 'clients' && <Clients clientData={clientData} />}
             {activeMenuItem === 'payments' && <Payments />}
             {activeMenuItem === 'historyPaiment' && <HistoryPaiment />}
-            {activeMenuItem === 'profil' && <Inscription />}
+            {activeMenuItem === 'profil' && <PageProfil />}
             {activeMenuItem === 'utilisateurs' && <PageUtilisateur />}
             {activeMenuItem === 'inscription' && <Inscription />}
             {activeMenuItem === 'Changer-mdp' && <ChangerMotDePasse />}

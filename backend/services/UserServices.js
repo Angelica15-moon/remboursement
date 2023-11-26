@@ -64,7 +64,39 @@ function changerMotDePasse(db, data) {
     });
 }
 
+function getUser(username) {
+    return new Promise((resolve, reject) => {
+        if(!username) {
+            reject({
+                code:402,
+                message: "Vous n'ête pas autorisé a utiliser cette fonction!"
+            })
+        }
+
+        const sql = "SELECT * FROM collecteur WHERE username = '" + username + "'";
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error("Erreur lors de la récupération des collecteur :", err);
+                reject({
+                    code: 500,
+                    message: "Erreur lors de la récupération des collecteur."
+                });
+            }
+            if (results.length === 0) {
+                resolve({
+                    code: 500,
+                    message: "Aucun utilisateur trouver."
+                });
+            }
+            resolve({
+                results
+            });
+        });
+    });
+}
+
 module.exports = {
     getAllUsers,
-    changerMotDePasse
+    changerMotDePasse,
+    getUser
 };

@@ -12,8 +12,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "luca",
-  password: "Just$Me12", // Mot de passe de la base de données
+  user: "root",
+  password: "", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -242,6 +242,17 @@ app.post("/resistration", async (req, res) => {
   const agent = req.body;
   try {
     const result = await RegistrationServices(db, agent);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+});
+
+app.get("/profil", async (req, res) => {
+  const agent = req.body;
+  try {
+   const result = await getUser(db, agent);
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);
