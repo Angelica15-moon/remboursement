@@ -64,7 +64,7 @@ function changerMotDePasse(db, data) {
     });
 }
 
-function getUser(username) {
+function getUser(db, username) {
     return new Promise((resolve, reject) => {
         if(!username) {
             reject({

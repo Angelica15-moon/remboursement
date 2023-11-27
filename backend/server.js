@@ -4,7 +4,7 @@ const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
-const { getAllUsers, changerMotDePasse } = require('./services/UserServices');
+const { getAllUsers, changerMotDePasse, getUser } = require('./services/UserServices');
 
 const app = express();
 
@@ -250,7 +250,7 @@ app.post("/resistration", async (req, res) => {
 });
 
 app.get("/profil", async (req, res) => {
-  const agent = req.body;
+  const agent = req.query.user;
   try {
    const result = await getUser(db, agent);
     return res.status(200).json(result);
