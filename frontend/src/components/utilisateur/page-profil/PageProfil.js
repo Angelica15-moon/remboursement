@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import './PageProfil.css';
 import InputGroup from 'react-bootstrap/InputGroup';
 import DataTable from 'react-data-table-component';
@@ -10,7 +9,7 @@ import Col from 'react-bootstrap/esm/Col';
 
 export default function PageProfil() {
     const [user, setUsers] = useState();
-    const { historiques, setHistoriques1 } = useState([]);
+    const [ historiques, setHistoriques ] = useState([]);
     const [error, setErrorMessage] = useState("");
     const [filterText, setFilterText] = useState('');
 
@@ -27,30 +26,29 @@ export default function PageProfil() {
                 setErrorMessage(error.message);
             });
 
-        fetch(`http://localhost:3002/historique-utilisateur?user=${encodeURIComponent(userConnected)}`, {
-            method: 'GET', headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => response.json())
-            .then((data) => {
-                setHistoriques1(data.results);
-            }).catch((error) => {
-                setErrorMessage(error.message);
-            });
-
+            fetch(`http://localhost:3002/historique-utilisateur?user=${encodeURIComponent(userConnected)}`, {
+                method: 'GET', headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+                .then((data) => {
+                    setHistoriques(data.results);
+                }).catch((error) => {
+                    setErrorMessage(error.message);
+                });
     }
-
+    console.log("RESPONSE historique : " + historiques);
     useEffect(() => {
         getProfil();
     }, []);
 
     const columns = [
-        { name: 'Ref Client', selector: row => row.nom, sortable: true },
-        { name: 'Ref Credit', selector: row => row.prenom, sortable: true },
+        { name: 'Ref Client', selector: row => row.RefClient, sortable: true },
+        { name: 'Ref Credit', selector: row => row.RefCredit, sortable: true },
         { name: 'Nom Client', selector: row => row.nom, sortable: true },
-        { name: 'date', selector: row => row.adresse, sortable: true },
-        { name: 'Montant', selector: row => row.tel, sortable: true },
-        { name: 'Facture', selector: row => row.tel, sortable: true },
+        { name: 'date', selector: row => row.datePaiement, sortable: true },
+        { name: 'Montant', selector: row => row.montantAPayer, sortable: true },
+        { name: 'Facture', selector: row => row.numeroFacture, sortable: true },
     ];
 
     const paginationComponentOptions = {
@@ -59,16 +57,14 @@ export default function PageProfil() {
         selectAllRowsItem: true,
         selectAllRowsItemText: 'Tous',
     };
-    /*
-        const filteredItems = historiques.filter(
-            item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.prenom && item.prenom.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.adresse && item.adresse.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.tel && item.tel.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.email && item.email.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.active && item.active.toLowerCase().includes(filterText.toLowerCase())),
-        );
-    */
+
+    const filteredItems = historiques && historiques.filter(
+        item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.RefClient && item.RefClient.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.RefCredit && item.RefCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+            (item.numeroFacture && item.numeroFacture.toLowerCase().includes(filterText.toLowerCase())),
+    ) || [];
+    
     const subHeaderComponentMemo = useMemo(() => {
         return (
             <Row>
@@ -101,7 +97,7 @@ export default function PageProfil() {
                                 </Col>
                             </Row>
                             <hr />
-                            <DataTable className='table table-bordered' columns={columns} dense direction="auto"
+                            <DataTable className='table table-bordered' data={filteredItems} columns={columns} dense direction="auto"
                                 pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
                                 fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
                                 subHeader subHeaderComponent={subHeaderComponentMemo}
