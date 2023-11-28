@@ -10,21 +10,34 @@ import Col from 'react-bootstrap/esm/Col';
 
 export default function PageProfil() {
     const [user, setUsers] = useState();
+    const { historiques, setHistoriques1 } = useState([]);
     const [error, setErrorMessage] = useState("");
     const [filterText, setFilterText] = useState('');
 
     function getProfil() {
         const userConnected = localStorage.getItem('user');
         fetch(`http://localhost:3002/profil?user=${encodeURIComponent(userConnected)}`, {
-            method: 'GET', headers: { 'Content-Type': 'application/json'
-         }
+            method: 'GET', headers: {
+                'Content-Type': 'application/json'
+            }
         }).then((response) => response.json())
             .then((data) => {
                 setUsers(data.results[0]);
             }).catch((error) => {
                 setErrorMessage(error.message);
             });
-            
+
+        fetch(`http://localhost:3002/historique-utilisateur?user=${encodeURIComponent(userConnected)}`, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => response.json())
+            .then((data) => {
+                setHistoriques1(data.results);
+            }).catch((error) => {
+                setErrorMessage(error.message);
+            });
+
     }
 
     useEffect(() => {
@@ -37,7 +50,7 @@ export default function PageProfil() {
         { name: 'Nom Client', selector: row => row.nom, sortable: true },
         { name: 'date', selector: row => row.adresse, sortable: true },
         { name: 'Montant', selector: row => row.tel, sortable: true },
-        { name: '...', selector: row => row.action }
+        { name: 'Facture', selector: row => row.tel, sortable: true },
     ];
 
     const paginationComponentOptions = {
@@ -46,16 +59,16 @@ export default function PageProfil() {
         selectAllRowsItem: true,
         selectAllRowsItemText: 'Tous',
     };
-/*
-    const filteredItems = listUtilisateur.filter(
-        item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.prenom && item.prenom.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.adresse && item.adresse.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.tel && item.tel.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.email && item.email.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.active && item.active.toLowerCase().includes(filterText.toLowerCase())),
-    );
-*/
+    /*
+        const filteredItems = historiques.filter(
+            item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.prenom && item.prenom.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.adresse && item.adresse.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.tel && item.tel.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.email && item.email.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.active && item.active.toLowerCase().includes(filterText.toLowerCase())),
+        );
+    */
     const subHeaderComponentMemo = useMemo(() => {
         return (
             <Row>
@@ -64,7 +77,6 @@ export default function PageProfil() {
                         <Form.Control size='sm'
                             onChange={e => setFilterText(e.target.value)} placeholder="Rechercher"
                             aria-label="Rechercher" aria-describedby="rechercher" />
-                        <InputGroup.Text id="rechercher">Rechercher</InputGroup.Text>
                     </InputGroup>
                 </Col>
             </Row>
@@ -78,12 +90,17 @@ export default function PageProfil() {
                 <Card.Body>
                     {user && (
                         <div>
-                            <Form.Label className='small'><strong>Nom :&nbsp;</strong>{user.nom}</Form.Label><br />
-                            <Form.Label className='small'><strong>Prénom :&nbsp;</strong>{user.prenom}</Form.Label><br />
-                            <Form.Label className='small'><strong>Adresse :&nbsp;</strong>{user.adresse}</Form.Label><br />
-                            <Form.Label className='small'><strong>E-mail :&nbsp;</strong>{user.email}</Form.Label><br />
-                            <Form.Label className='small'><strong>Téléphone :&nbsp;</strong>{user.tel}</Form.Label><br />
-                            <hr/>
+                            <Row>
+                                <Col xs={12} sm={6}>
+                                    <Form.Label className='small'><strong>{user.nom}&nbsp;{user.prenom}</strong></Form.Label><br />
+                                    <Form.Label className='small'><strong>Adresse :&nbsp;</strong>{user.adresse}</Form.Label><br />
+                                </Col>
+                                <Col xs={12} sm={6}>
+                                    <Form.Label className='small'><strong>E-mail :&nbsp;</strong>{user.email}</Form.Label><br />
+                                    <Form.Label className='small'><strong>Téléphone :&nbsp;</strong>{user.tel}</Form.Label><br />
+                                </Col>
+                            </Row>
+                            <hr />
                             <DataTable className='table table-bordered' columns={columns} dense direction="auto"
                                 pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
                                 fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive

@@ -4,7 +4,7 @@ const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
-const { getAllUsers, changerMotDePasse, getUser } = require('./services/UserServices');
+const { getAllUsers, changerMotDePasse, getUser, getUserHistory } = require('./services/UserServices');
 
 const app = express();
 
@@ -12,8 +12,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "", // Mot de passe de la base de données
+  user: "luca",
+  password: "Just$Me12", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -252,7 +252,18 @@ app.post("/resistration", async (req, res) => {
 app.get("/profil", async (req, res) => {
   const agent = req.query.user;
   try {
-   const result = await getUser(db, agent);
+    const result = await getUser(db, agent);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+});
+
+app.get("/historique-utilisateur", async (req, res) => {
+  const agent = req.query.user;
+  try {
+    const result = await getUserHistory(db, agent);
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);

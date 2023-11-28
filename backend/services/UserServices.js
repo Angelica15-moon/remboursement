@@ -64,16 +64,21 @@ function changerMotDePasse(db, data) {
     });
 }
 
+/**
+ * Return un utilisateur par son nom d'utilisateur
+ * @param {*} db 
+ * @param {*} username 
+ * @returns 
+ */
 function getUser(db, username) {
     return new Promise((resolve, reject) => {
-        if(!username) {
+        if (!username) {
             reject({
-                code:402,
+                code: 402,
                 message: "Vous n'ête pas autorisé a utiliser cette fonction!"
             })
         }
-
-        const sql = "SELECT * FROM collecteur WHERE username = '" + username + "'";
+        const sql = "SELECT nom, prenom, adresse, email, tel FROM collecteur WHERE username = '" + username + "'";
         db.query(sql, (err, results) => {
             if (err) {
                 console.error("Erreur lors de la récupération des collecteur :", err);
@@ -84,7 +89,7 @@ function getUser(db, username) {
             }
             if (results.length === 0) {
                 resolve({
-                    code: 500,
+                    code: 200,
                     message: "Aucun utilisateur trouver."
                 });
             }
@@ -95,8 +100,41 @@ function getUser(db, username) {
     });
 }
 
+function getUserHistory(db, username) {
+
+    return new Promise((resolve, reject) => {
+        if (!username) {
+            reject({
+                code: 402,
+                message: "Vous n'ête pas autorisé a utiliser cette fonction!"
+            })
+        }
+        const sql = "SELECT p.RefClient, p.montantAPayer, p.datePaiement, p.numeroFacture, c.RefCredit, c.nom FROM payments p JOIN excel_data c ON p.RefClient = c.RefClient WHERE p.collecteur = '" + username + "'";
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error("Erreur lors de la récupération des collecteur :", err);
+                reject({
+                    code: 500,
+                    message: "Erreur lors de la récupération des collecteur."
+                });
+            }
+            if (results.length === 0) {
+                resolve({
+                    code: 200,
+                    message: "Aucune donnee trouver."
+                });
+            }
+            resolve({
+                results
+            });
+        });
+    });
+
+}
+
 module.exports = {
     getAllUsers,
     changerMotDePasse,
-    getUser
+    getUser,
+    getUserHistory
 };

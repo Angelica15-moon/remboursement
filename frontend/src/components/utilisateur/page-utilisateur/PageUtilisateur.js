@@ -76,7 +76,6 @@ export default function PageUtilisateur() {
                         <Form.Control size='sm'
                             onChange={e => setFilterText(e.target.value)} placeholder="Rechercher"
                             aria-label="Rechercher" aria-describedby="rechercher" />
-                        <InputGroup.Text id="rechercher">Rechercher</InputGroup.Text>
                     </InputGroup>
                 </Col>
             </Row>
