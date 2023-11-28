@@ -38,7 +38,6 @@ function LoginService(db, username, password) {
             }
 
             if (results.length) {
-
                 if (!comparePassword(password, results[0].password)) {
                     reject({
                         code: 401,

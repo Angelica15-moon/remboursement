@@ -40,6 +40,39 @@ function getAllUsers(db) {
 function changerMotDePasse(db, data) {
 
     return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM collecteur WHERE username='" + data.username + "'";
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error("Erreur lors de la récupération des collecteur :", err);
+                reject({
+                    code: 500,
+                    message: "Erreur lors de la récupération des collecteur."
+                });
+            }
+
+            if (results.length === 0) {
+                reject({
+                    code: 500,
+                    message: "Aucun utilisateur trouver avec l'identifiant : " + username
+                });
+            }
+
+            if (!results[0].active) {
+                reject({
+                    code: 402,
+                    message: "Votre compte a ete desactive, veuillez contactez votre administrateur."
+                });
+            }
+
+            if (results.length) {
+                if (!comparePassword(password, results[0].password)) {
+                    reject({
+                        code: 401,
+                        message: "Invalid credentials"
+                    });
+                }
+            }
+        });
 
         const sql_update_user = "UPDATE collecteur SET password = '" + hashPassword(data.newpassword) + "' WHERE username='" + data.username + "'";
         db.query(sql_update_user, (err, results) => {

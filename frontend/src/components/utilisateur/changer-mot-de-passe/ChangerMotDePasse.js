@@ -17,6 +17,7 @@ export default function ChangerMotDePasse() {
     }
     const handleUserFormSubimt = (e) => {
         e.preventDefault();
+        console.log("==================");
         if (newpassword !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
         } else {
