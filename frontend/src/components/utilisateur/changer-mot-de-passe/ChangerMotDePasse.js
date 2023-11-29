@@ -17,17 +17,15 @@ export default function ChangerMotDePasse() {
     }
     const handleUserFormSubimt = (e) => {
         e.preventDefault();
-        console.log("==================");
         if (newpassword !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
         } else {
             fetch('http://localhost:3002/change-password', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({"user" : getUserConnected(), "newpassword" : newpassword}),
+                body: JSON.stringify({ "user": getUserConnected(), "oldpassword": password, "newpassword": newpassword }),
             }).then((response) => response.json())
                 .then((data) => {
                     clearData(data);
-                    window.location.reload();
                 }).catch((error) => {
                     setErrorMessage(error.message);
                 });
@@ -54,7 +52,7 @@ export default function ChangerMotDePasse() {
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="passwrod">Mot de passe</Form.Label>
                                     <Form.Control type='password' id="password" placeholder="Mot de passe" value={password}
-                                            required size='sm' onChange={(e) => setPassword(e.target.value)} />
+                                        required size='sm' onChange={(e) => setPassword(e.target.value)} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="npassword">Nouveau mot de passe</Form.Label>
@@ -63,7 +61,7 @@ export default function ChangerMotDePasse() {
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="cpassword">Confirmé le mot de passe</Form.Label>
-                                    <Form.Control type='password' id="cpassword" placeholder="Adresse" value={cpassword}
+                                    <Form.Control type='password' id="cpassword" placeholder="Confirmé le mot de passe" value={cpassword}
                                         required size='sm' onChange={(e) => setCPassword(e.target.value)} />
                                 </Form.Group>
                                 <div className='text-end mt-2'>

@@ -33,16 +33,17 @@ function getAllUsers(db) {
 /**
  * Fonction pour changer le mot e passe d'un utilisateur
  * @param {*} db 
- * @param {*} password 
- * @param {*} username 
+ * @param {*} data
  * @returns 
  */
 function changerMotDePasse(db, data) {
 
     return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM collecteur WHERE username='" + data.username + "'";
+        var isChange = false;
+        const sql = "SELECT * FROM collecteur WHERE username='" + data.user + "'";
         db.query(sql, (err, results) => {
             if (err) {
+                isChange = false;
                 console.error("Erreur lors de la récupération des collecteur :", err);
                 reject({
                     code: 500,
@@ -51,13 +52,15 @@ function changerMotDePasse(db, data) {
             }
 
             if (results.length === 0) {
+                isChange = false;
                 reject({
                     code: 500,
-                    message: "Aucun utilisateur trouver avec l'identifiant : " + username
+                    message: "Aucun utilisateur trouver avec l'identifiant : " + data.user
                 });
             }
 
             if (!results[0].active) {
+                isChange = false;
                 reject({
                     code: 402,
                     message: "Votre compte a ete desactive, veuillez contactez votre administrateur."
@@ -65,35 +68,41 @@ function changerMotDePasse(db, data) {
             }
 
             if (results.length) {
-                if (!comparePassword(password, results[0].password)) {
+                if (!comparePassword(data.oldpassword, results[0].password)) {
+                    isChange = false;
                     reject({
                         code: 401,
                         message: "Invalid credentials"
                     });
+                } else {
+                    isChange = true;
                 }
             }
         });
 
-        const sql_update_user = "UPDATE collecteur SET password = '" + hashPassword(data.newpassword) + "' WHERE username='" + data.username + "'";
-        db.query(sql_update_user, (err, results) => {
-            if (err) {
-                console.error("Erreur lors de la modifications de mot de passe :", err);
-                reject({
-                    code: 500,
-                    message: "Erreur lors de la modifications de mot de passe."
-                });
-            }
-            if (results.length === 0) {
+        if (isChange) {
+            const sql_update_user = "UPDATE collecteur SET password = '" + hashPassword(data.newpassword) + "' WHERE username='" + data.user + "'";
+            db.query(sql_update_user, (err, results) => {
+                if (err) {
+                    console.error("Erreur lors de la modifications de mot de passe :", err);
+                    reject({
+                        code: 500,
+                        message: "Erreur lors de la modifications de mot de passe."
+                    });
+                }
+                if (results.length === 0) {
+                    resolve({
+                        code: 500,
+                        message: "Aucun utilisateur trouver."
+                    });
+                }
                 resolve({
-                    code: 500,
-                    message: "Aucun utilisateur trouver."
+                    code: 200,
+                    message: "Mot de passe changer avec success."
                 });
-            }
-            resolve({
-                code: 200,
-                message: "Mot de passe changer avec success."
             });
-        });
+        }
+
     });
 }
 

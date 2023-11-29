@@ -35,6 +35,7 @@ export default function Login() {
     function setTokenStorage(response) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', response.username);
+        localStorage.setItem('fonction', response.fonction);
         window.location.reload();
     }
 

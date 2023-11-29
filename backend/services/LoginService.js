@@ -53,6 +53,7 @@ function LoginService(db, username, password) {
             const token = jwt.sign(data, jwtSecretKey);
             resolve({
                 username: username,
+                fonction: results[0].role,
                 token: token
             });
         });

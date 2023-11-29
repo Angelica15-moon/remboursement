@@ -17,6 +17,7 @@ import PageUtilisateur from './components/utilisateur/page-utilisateur/PageUtili
 import ChangerMotDePasse from './components/utilisateur/changer-mot-de-passe/ChangerMotDePasse';
 import PageProfil from './components/utilisateur/page-profil/PageProfil.js';
 
+var fonction;
 
 class App extends Component {
   constructor(props) {
@@ -30,6 +31,10 @@ class App extends Component {
   handleMenuItemClick = (menuItem) => {
     this.setState({ activeMenuItem: menuItem });
   };
+
+  getIfAdmin() {
+    return localStorage.getItem("fonction") === "admin";
+  }
 
   getTonken() {
     return !!localStorage.getItem('token');
@@ -49,7 +54,7 @@ class App extends Component {
 
     return (
       <div className='bg-secondary height-100'>
-        <Navbar bg="light" collapseOnSelect data-bs-theme="light" expand="lg" className="bg-body-tertiary hide-on-pc px-2">
+        <Navbar bg="light" collapseOnSelect data-bs-theme="light" expand="lg" className="bg-body-tertiary hide-on-pc px-2 mb-3">
           <Container fluid>
             <Navbar.Brand href="#" onClick={() => this.handleMenuItemClick('clients')}>Cefor - GAP</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
@@ -59,7 +64,12 @@ class App extends Component {
                 <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'inscription' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'profil' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('profil')}>Profil</Nav.Link>
+                {this.getIfAdmin() && (
+                  <><Nav.Link href="#" className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</Nav.Link>
+                    <Nav.Link href="#" className={activeMenuItem === 'inscription' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</Nav.Link></>
+                )}
+                <Nav.Link href="#" className={activeMenuItem === 'Changer-mdp' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('Changer-mdp')}>Changer mdp</Nav.Link>
                 <Nav.Link href="#" className='p-0 px-2 small' onClick={() => this.logout()}>Déconnection</Nav.Link>
               </Nav>
             </Navbar.Collapse>
@@ -92,12 +102,16 @@ class App extends Component {
                           <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>
                           </ListGroup.Item>
-                          <ListGroup.Item className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu' : ''}>
-                            <a href="#" onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</a>
-                          </ListGroup.Item>
-                          <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
-                            <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
-                          </ListGroup.Item>
+                          {this.getIfAdmin() && (
+                            <>
+                              <ListGroup.Item className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu' : ''}>
+                                <a href="#" onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</a>
+                              </ListGroup.Item>
+                              <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
+                                <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
+                              </ListGroup.Item>
+                            </>
+                          )}
                           <ListGroup.Item className={activeMenuItem === 'Changer-mdp' ? 'bg-primary active-menu' : ''}>
                             <a href="#" onClick={() => this.handleMenuItemClick('Changer-mdp')}>Changer mdp</a>
                           </ListGroup.Item>
