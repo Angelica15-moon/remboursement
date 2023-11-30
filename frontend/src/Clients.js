@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
-  const [dataFil, setFilterData] = useState([]);
+  const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
     // Effectuez une requête GET vers votre API pour récupérer les données de la table excel_data
@@ -45,77 +46,41 @@ function ClientList() {
     selectAllRowsItemText: 'Tous',
   };
 
-  function handleFiilter(event) {
-    // Vérifier si le filtre est vide ou null
-    if (!event.target.value) {
-      // Si le filtre est vide, rétablir les données non filtrées
-      clientList = clients.map(client => new Client(
-        client.RefClient, client.RefCredit, client.nom,
-        client.MontantAbandonnee, client.DatePassagePerte,
-        client.CAResponsable, client.Agence, client.Type
-      ));
-    } else {
-      // Appliquer le filtre sur refClient
-      clientList = clients.filter(row => row.RefClient.includes(event.target.value))
-        .map(client => new Client(
-          client.RefClient, client.RefClient, client.nom,
-          client.MontantAbandonnee, client.DatePassagePerte,
-          client.CAResponsable, client.Agence, client.Type
-        ));
-      clientList = [];
-    }
-  }
-  /*
-    function handleFiilter(event) {
-      const dataFilter = clientList.filter(row => {
-        return row.refClient.toLowerCase().includes(event.target.value.toLowerCase()) || row.refCredit.toLowerCase().includes(event.target.value.toLowerCase());
-      });
-      setFilterData(dataFilter);
-    }
-  */
+  const filteredItems = clientList.filter(
+    item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.montantAbandonnee && item.montantAbandonnee.includes(filterText.toLowerCase())) ||
+      (item.datePassagePerte && item.datePassagePerte.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.type && item.type.toLowerCase().includes(filterText.toLowerCase())),
+  );
+
+  const subHeaderComponentMemo = useMemo(() => {
+    return (
+      <Row>
+        <Col>
+          <InputGroup className="mb-3" size='sm'>
+            <Form.Control size='sm'
+              onChange={e => setFilterText(e.target.value)} placeholder="Rechercher"
+              aria-label="Rechercher" aria-describedby="rechercher" />
+          </InputGroup>
+        </Col>
+      </Row>
+    );
+  });
+
   return (
     <div className='p-3 pt-0'>
       <Card>
         <Card.Header>Liste des Clients</Card.Header>
-        <Row className='mb-3 px-3'>
-          <Col>
-            <Form.Label htmlFor="ref-client">Referecnce client</Form.Label>
-            <Form.Select id='ref-client' aria-label="Referecnce client" size='sm' onChange={handleFiilter}>
-              <option>RefClient</option>
-              {clientList.map((opt) => (
-                <option key={opt.refClient} value={opt.refClient}>
-                  {opt.refClient}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col>
-            <Form.Label htmlFor="ref-credit">Referecnce credit</Form.Label>
-            <Form.Select id='ref-client' aria-label="Referecnce credit" size='sm' onChange={handleFiilter}>
-              <option>RefCredit</option>
-              {clientList.map((opt) => (
-                <option key={opt.refCredit} value={opt.refCredit}>
-                  {opt.refCredit}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col>
-            <Form.Label htmlFor="autre-critere">Autre critère</Form.Label>
-            <Form.Control
-              type="text"
-              id="autre-critere"
-              aria-describedby="autre critere de recherche"
-              size='sm'
-            />
-          </Col>
-        </Row>
         <div className='p-3'>
           <DataTable
-            columns={columns} data={clientList} dense direction="auto" pagination
+            columns={columns} data={filteredItems} dense direction="auto" pagination
             paginationComponentOptions={paginationComponentOptions}
             fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
-            persistTableHead responsive
+            persistTableHead responsive subHeader subHeaderComponent={subHeaderComponentMemo}
           />
         </div>
       </Card>
