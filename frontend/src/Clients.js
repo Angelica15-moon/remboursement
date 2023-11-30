@@ -6,10 +6,12 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import InputGroup from 'react-bootstrap/InputGroup';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 function ClientList() {
   const [clients, setClients] = useState([]);
   const [filterText, setFilterText] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     // Effectuez une requête GET vers votre API pour récupérer les données de la table excel_data
@@ -18,7 +20,7 @@ function ClientList() {
         setClients(response.data);
       })
       .catch(error => {
-        console.error('Erreur lors de la récupération des données de la table excel_data :', error);
+        setErrorMessage(error.message);
       });
   }, []);
 
@@ -46,8 +48,9 @@ function ClientList() {
     selectAllRowsItemText: 'Tous',
   };
 
-  const filteredItems = clientList.filter(
-    item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+  const filteredItems = useMemo(
+    () => clientList.filter(
+      item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.montantAbandonnee && item.montantAbandonnee.includes(filterText.toLowerCase())) ||
@@ -55,6 +58,8 @@ function ClientList() {
       (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.type && item.type.toLowerCase().includes(filterText.toLowerCase())),
+    ),
+    [clientList, filterText]
   );
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -69,13 +74,16 @@ function ClientList() {
         </Col>
       </Row>
     );
-  });
+  }, []);
 
   return (
     <div className='p-3 pt-0'>
       <Card>
         <Card.Header>Liste des Clients</Card.Header>
         <div className='p-3'>
+        {errorMessage && (
+          <FormLabel className='text-danger'>{errorMessage}</FormLabel>
+        )}
           <DataTable
             columns={columns} data={filteredItems} dense direction="auto" pagination
             paginationComponentOptions={paginationComponentOptions}
