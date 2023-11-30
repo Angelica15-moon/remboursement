@@ -9,10 +9,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 export default function PageUtilisateur() {
     const [usersList, setUsers] = useState([]);
-    const [error, setErrorMessage] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
     const [filterText, setFilterText] = useState('');
 
     fetch('http://localhost:3002/collecteur', {
@@ -38,7 +39,7 @@ export default function PageUtilisateur() {
 
     const listUtilisateur = usersList.map(user => new User(
         user.nom, user.prenom, user.adresse,
-        user.email, user.tel, user.active ? "Active" : "Desactiver",
+        user.email, user.tel, user.active ? "Activer" : "Désactiver",
         setAction(user.username)
     ));
 
@@ -59,13 +60,16 @@ export default function PageUtilisateur() {
         selectAllRowsItemText: 'Tous',
     };
 
-    const filteredItems = listUtilisateur.filter(
-        item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+    const filteredItems = useMemo(
+        () => listUtilisateur.filter(
+            item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
             (item.prenom && item.prenom.toLowerCase().includes(filterText.toLowerCase())) ||
             (item.adresse && item.adresse.toLowerCase().includes(filterText.toLowerCase())) ||
             (item.tel && item.tel.toLowerCase().includes(filterText.toLowerCase())) ||
             (item.email && item.email.toLowerCase().includes(filterText.toLowerCase())) ||
             (item.active && item.active.toLowerCase().includes(filterText.toLowerCase())),
+        ),
+        [listUtilisateur, filterText]
     );
 
     const subHeaderComponentMemo = useMemo(() => {
@@ -80,13 +84,16 @@ export default function PageUtilisateur() {
                 </Col>
             </Row>
         );
-    });
+    }, []);
 
     return (
         <div className='p-3 pt-0'>
             <Card>
                 <Card.Header>Liste des utilisateurs</Card.Header>
                 <Card.Body>
+                {errorMessage && (
+                    <FormLabel className='text-danger'>{errorMessage}</FormLabel>
+                )}
                     <DataTable className='table table-bordered' data={filteredItems} columns={columns} dense direction="auto"
                         pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
                         fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
