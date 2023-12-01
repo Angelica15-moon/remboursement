@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
 import DataTable from 'react-data-table-component';
@@ -6,11 +6,33 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 function HistoriquePaiements() {
   const [excelData, setExcelData] = useState([]);
   const [selectedRef, setSelectedRef] = useState("");
   const [clients, setClients] = useState(null);
+  const [filterText, setFilterText] = useState('');
+  const [historiques, setHistoriques] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function formatDate(dateString) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  function getCustomersHistory(refClient) {
+    fetch(`http://localhost:3002/historique-client?client=${encodeURIComponent(refClient)}`, {
+      method: 'GET', headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => response.json())
+      .then((data) => {
+        setHistoriques(data.results);
+      }).catch((error) => {
+        setErrorMessage(error.message);
+      });
+  }
 
   useEffect(() => {
     // Effectuez une requête pour récupérer les données de la table excel_data
@@ -28,15 +50,16 @@ function HistoriquePaiements() {
     setSelectedRef(selectedRefValue);
     const client = excelData.find((c) => c.RefClient === selectedRefValue);
     setClients(client);
+    getCustomersHistory(selectedRefValue);
   }
 
   const columns = [
     { name: 'Ref Credit', selector: row => row.RefCredit, sortable: true },
-    { name: 'Date', selector: row => row.DatePassagePerte, sortable: true },
-    { name: 'Montant payé', selector: row => row.MontantAbandonnee, sortable: true },
-    { name: 'Reste', selector: row => row.MontantAbandonnee, sortable: true },
-    { name: 'Agent', selector: row => row.Agence, sortable: true },
-    { name: 'Agence', selector: row => row.Agence, sortable: true }
+    { name: 'Date', selector: row => row.datePaiement, sortable: true },
+    { name: 'Montant payé', selector: row => row.montantAPayer, sortable: true },
+    { name: 'Reste', selector: row => row.ResteApayer, sortable: true },
+    { name: 'Agent', selector: row => row.collecteur, sortable: true },
+    { name: 'Agence', selector: row => row.agence, sortable: true }
   ];
 
   const paginationComponentOptions = {
@@ -45,6 +68,33 @@ function HistoriquePaiements() {
     selectAllRowsItem: true,
     selectAllRowsItemText: 'Tous',
   };
+
+  const filteredItems = useMemo(
+    () => historiques && historiques.filter(
+      item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.RefCredit && item.RefCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.datePaiement && item.datePaiement.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.montantAPayer && item.montantAPayer.toString().includes(filterText.toLowerCase())) ||
+        (item.ResteApayer && item.ResteApayer.toString().includes(filterText.toLowerCase())) ||
+        (item.collecteur && item.collecteur.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())),
+    ),
+    [historiques, filterText]
+  );
+
+  const subHeaderComponentMemo = useMemo(() => {
+    return (
+      <Row>
+        <Col>
+          <InputGroup className="mb-3" size='sm'>
+            <Form.Control size='sm'
+              onChange={e => setFilterText(e.target.value)} placeholder="Rechercher"
+              aria-label="Rechercher" aria-describedby="rechercher" />
+          </InputGroup>
+        </Col>
+      </Row>
+    );
+  }, []);
 
   return (
     <div className='p-3 pt-0'>
@@ -68,12 +118,16 @@ function HistoriquePaiements() {
             <Col className='show-on-pc'></Col><Col className='show-on-pc'></Col>
           </Row>
           <hr className='mb-3' />
+          {errorMessage && (
+            <FormLabel className='text-danger'>{errorMessage}</FormLabel>
+          )}
           {clients && (
             <div className='px-3 mb-3'><b>{clients.nom}</b></div>
           )}
-          <DataTable className='table table-bordered' columns={columns} data={excelData} dense direction="auto"
+          <DataTable className='table table-bordered' columns={columns} data={filteredItems} dense direction="auto"
             pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
-            fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
+            fixedHeaderScrollHeight="305px" highlightOnHover pointerOnHover persistTableHead responsive
+            subHeader subHeaderComponent={subHeaderComponentMemo}
           />
         </Card.Body>
       </Card>

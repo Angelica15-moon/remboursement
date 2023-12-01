@@ -49,15 +49,15 @@ function ClientList() {
   };
 
   const filteredItems = useMemo(
-    () => clientList.filter(
+    () => clientList && clientList.filter(
       item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.montantAbandonnee && item.montantAbandonnee.includes(filterText.toLowerCase())) ||
-      (item.datePassagePerte && item.datePassagePerte.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.type && item.type.toLowerCase().includes(filterText.toLowerCase())),
+        (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.montantAbandonnee && item.montantAbandonnee.includes(filterText.toLowerCase())) ||
+        (item.datePassagePerte && item.datePassagePerte.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
+        (item.type && item.type.toLowerCase().includes(filterText.toLowerCase())),
     ),
     [clientList, filterText]
   );
@@ -81,9 +81,9 @@ function ClientList() {
       <Card>
         <Card.Header>Liste des Clients</Card.Header>
         <div className='p-3'>
-        {errorMessage && (
-          <FormLabel className='text-danger'>{errorMessage}</FormLabel>
-        )}
+          {errorMessage && (
+            <FormLabel className='text-danger'>{errorMessage}</FormLabel>
+          )}
           <DataTable
             columns={columns} data={filteredItems} dense direction="auto" pagination
             paginationComponentOptions={paginationComponentOptions}

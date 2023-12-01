@@ -5,6 +5,7 @@ const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
 const { getAllUsers, changerMotDePasse, getUser, getUserHistory } = require('./services/UserServices');
+const { getCustomersHistory } = require('./services/CustomerServices');
 
 const app = express();
 
@@ -106,10 +107,8 @@ app.post("/enregistrer-remboursement", async (req, res) => {
   if (!remboursementData) {
     return res.status(400).json({ error: "Données de remboursement invalides." });
   }
-
   const insertRemboursementSQL =
     "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, ResteApayer) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
   const {
     montantAPayer,
     datePaiement,
@@ -118,9 +117,7 @@ app.post("/enregistrer-remboursement", async (req, res) => {
     numeroFacture,
     refClient
   } = remboursementData;
-
   const restApayer = await executionCalulRestApayer(refClient, montantAPayer);
-
   db.query(
     insertRemboursementSQL,
     [montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, restApayer],
@@ -129,7 +126,6 @@ app.post("/enregistrer-remboursement", async (req, res) => {
         console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
         return res.status(500).json({ error: "Erreur lors de l'enregistrement des données de remboursement." });
       }
-
       return res.status(200).json({ message: "Données de remboursement enregistrées avec succès." });
     }
   );
@@ -264,6 +260,17 @@ app.get("/historique-utilisateur", async (req, res) => {
   const agent = req.query.user;
   try {
     const result = await getUserHistory(db, agent);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+});
+
+app.get("/historique-client", async (req, res) => {
+  const client = req.query.client;
+  try {
+    const result = await getCustomersHistory(db, client);
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);

@@ -142,6 +142,12 @@ function getUser(db, username) {
     });
 }
 
+/**
+ * Recherche l'gistorique d'un utilisateur ou agent / collecteur
+ * @param {*} db 
+ * @param {*} username 
+ * @returns 
+ */
 function getUserHistory(db, username) {
 
     return new Promise((resolve, reject) => {
