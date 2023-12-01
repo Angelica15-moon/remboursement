@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 Modal.setAppElement('#root');
 
@@ -30,12 +31,26 @@ function Payments() {
   const [selectedRef, setSelectedRef] = useState("");
   const [montantAPayer, setMontantAPayer] = useState("");
   const [datePaiement, setDatePaiement] = useState("");
-  const [collecteur, setCollecteur] = useState("");
+  const [userConnected, setUserConnected] = useState(null);
+  const collecteur = localStorage.getItem("user");
   const [agence, setAgence] = useState("");
-  const [numeroFacture, setNumeroFacture] = useState("");
+  const numeroFacture = "FACT" + Date.now();
   const [message, setMessage] = useState(""); // Pour le message d'alerte
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [error, setErrorMessage] = useState("");
+
+  function getProfil() {
+    fetch(`http://localhost:3002/profil?user=${encodeURIComponent(collecteur)}`, {
+        method: 'GET', headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => response.json())
+        .then((data) => {
+          setUserConnected(data.results[0]);
+        }).catch((error) => {
+            setErrorMessage(error.message);
+        });
+  }
 
   const handleRemboursementSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +64,6 @@ function Payments() {
       refClient: selectedClient.RefClient,
     };
 
-
     if (validateData(remboursementData)) {
       setMessage(validateData(remboursementData));
       setModalIsOpen(true);
@@ -58,9 +72,6 @@ function Payments() {
         .then((response) => {
           setMontantAPayer("");
           setDatePaiement("");
-          setCollecteur("");
-          setAgence("");
-          setNumeroFacture("");
           setMessage("Paiement remboursement enregistré avec succès !");
           setModalIsOpen(true);
         })
@@ -76,6 +87,7 @@ function Payments() {
     axios.get("http://localhost:3002/excel-data")
       .then((response) => {
         setClients(response.data);
+        getProfil();
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
@@ -92,14 +104,12 @@ function Payments() {
     );
     setDatePaiement(datep.getDate());
     setSelectedClient(client);
+    setAgence(userConnected.agence);
   }
 
   function clearData(params) {
-    setCollecteur("");
     setMontantAPayer(0);
-    setAgence("");
     setDatePaiement("");
-    setNumeroFacture("");
   }
 
   return (
@@ -156,8 +166,12 @@ function Payments() {
             <hr />
             <h2 className='small'>Champs à saisir ....</h2>
             <Form onSubmit={handleRemboursementSubmit}>
+              {error && (
+                <FormLabel className='text-danger'>{error}</FormLabel>
+              )}
               <Row className='p-2'>
                 <Col>
+                <Form.Label className='small'><strong>Agent :&nbsp;{collecteur}</strong></Form.Label><br />
                   <Form.Group className="mb-3">
                     <Form.Label className='small' htmlFor="montantAPayer">Montant à payer :</Form.Label>
                     <Form.Control type='number' id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
@@ -168,23 +182,11 @@ function Payments() {
                     <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
                       value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)} />
                   </Form.Group>
-                  <Form.Group className="mb-3 full-width display-block">
-                    <Form.Label className='small' htmlFor="collecteur">Collecteur :</Form.Label>
-                    <Form.Control type='text' id="collecteur" placeholder="Collecteur" required size='sm'
-                      value={collecteur} onChange={(e) => setCollecteur(e.target.value)} />
-                  </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Group className="mb-3">
-                    <Form.Label className='small' htmlFor="agence">Agence :</Form.Label>
-                    <Form.Control className='small' type='text' id="agence" placeholder="Agence" value={agence}
-                      required size='sm' onChange={(e) => setAgence(e.target.value)} />
-                  </Form.Group>
+                <Form.Label className='small'><strong>Agence :&nbsp;{agence}</strong></Form.Label><br />
                   <Form.Group xs={12} sm={6} className="mb-3">
-                    <Form.Label className='small' htmlFor="numeroFacture">Numéro de facture :</Form.Label>
-                    <Form.Control type="text" id="numeroFacture" name="numeroFacture"
-                      value={numeroFacture} required onChange={(e) => setNumeroFacture(e.target.value)}
-                      size='sm' />
+                    <Form.Label className='small' htmlFor="numeroFacture"><strong>Numéro de facture :&nbsp;{numeroFacture}</strong></Form.Label>
                   </Form.Group>
                   <div className='text-end mt-2'>
                     <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>

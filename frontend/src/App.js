@@ -12,12 +12,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Login from './components/Login';
 import Inscription from './components/inscription/Inscription';
-import Accordion from 'react-bootstrap/Accordion';
 import PageUtilisateur from './components/utilisateur/page-utilisateur/PageUtilisateur'
 import ChangerMotDePasse from './components/utilisateur/changer-mot-de-passe/ChangerMotDePasse';
 import PageProfil from './components/utilisateur/page-profil/PageProfil.js';
-
-var fonction;
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 
 class App extends Component {
   constructor(props) {
@@ -60,9 +59,9 @@ class App extends Component {
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll">
               <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '200px' }} navbarScroll >
-                <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('clients')}>Clients</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('payments')}>Paiements</Nav.Link>
-                <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'clients' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('clients')}><FontAwesomeIcon icon={faUser} />&nbsp;Clients</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'payments' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('payments')}><FontAwesomeIcon icon={faMoneyBill} />&nbsp;Paiements</Nav.Link>
+                <Nav.Link href="#" className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de comptes</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'insertion' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('insertion')}>Insertion</Nav.Link>
                 <Nav.Link href="#" className={activeMenuItem === 'profil' ? 'bg-primary active-menu p-0 px-2 small text-white' : 'p-0 px-2 small'} onClick={() => this.handleMenuItemClick('profil')}>Profil</Nav.Link>
                 {this.getIfAdmin() && (
@@ -82,43 +81,32 @@ class App extends Component {
               <Card.Text className='px-4 mb-0 small-text' >NAVIGATION</Card.Text>
               <ListGroup variant="flush" className='mt-0 p-2 height-100' >
                 <ListGroup.Item className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''}>
-                  <a href="#" onClick={() => this.handleMenuItemClick('clients')}>Clients</a>
+                  <a href="#" onClick={() => this.handleMenuItemClick('clients')}><FontAwesomeIcon icon={faUser} />&nbsp;Clients</a>
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'payments' ? 'bg-primary active-menu' : ''}>
-                  <a href="#" onClick={() => this.handleMenuItemClick('payments')}>Paiements</a>
+                  <a href="#" onClick={() => this.handleMenuItemClick('payments')}><FontAwesomeIcon icon={faMoneyBill} />&nbsp;Paiements</a>
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'historyPaiment' ? 'bg-primary active-menu' : ''}>
-                  <a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de compres</a>
+                  <a href="#" onClick={() => this.handleMenuItemClick('historyPaiment')}>Releve de comptes</a>
                 </ListGroup.Item>
                 <ListGroup.Item className={activeMenuItem === 'insertion' ? 'bg-primary active-menu' : ''}>
                   <a href="#" onClick={() => this.handleMenuItemClick('insertion')}>Insertion</a>
                 </ListGroup.Item>
-                <ListGroup.Item>
-                  <Accordion className='full-width small' sm>
-                    <Accordion.Item eventKey="0" flush>
-                      <Accordion.Header className='small-text m-0 p-0'>Parametres</Accordion.Header>
-                      <Accordion.Body className='m-0 p-0'>
-                        <ListGroup variant="flush" className='mt-0 p-0'>
-                          <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
-                            <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>
-                          </ListGroup.Item>
-                          {this.getIfAdmin() && (
-                            <>
-                              <ListGroup.Item className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu' : ''}>
-                                <a href="#" onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</a>
-                              </ListGroup.Item>
-                              <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
-                                <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
-                              </ListGroup.Item>
-                            </>
-                          )}
-                          <ListGroup.Item className={activeMenuItem === 'Changer-mdp' ? 'bg-primary active-menu' : ''}>
-                            <a href="#" onClick={() => this.handleMenuItemClick('Changer-mdp')}>Changer mdp</a>
-                          </ListGroup.Item>
-                        </ListGroup>
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
+                <ListGroup.Item className={activeMenuItem === 'profil' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('profil')}>Profil</a>
+                </ListGroup.Item>
+                {this.getIfAdmin() && (
+                  <>
+                    <ListGroup.Item className={activeMenuItem === 'utilisateurs' ? 'bg-primary active-menu' : ''}>
+                      <a href="#" onClick={() => this.handleMenuItemClick('utilisateurs')}>Utilisateurs</a>
+                    </ListGroup.Item>
+                    <ListGroup.Item className={activeMenuItem === 'inscription' ? 'bg-primary active-menu' : ''}>
+                      <a href="#" onClick={() => this.handleMenuItemClick('inscription')}>Créer un agent</a>
+                    </ListGroup.Item>
+                  </>
+                )}
+                <ListGroup.Item className={activeMenuItem === 'Changer-mdp' ? 'bg-primary active-menu' : ''}>
+                  <a href="#" onClick={() => this.handleMenuItemClick('Changer-mdp')}>Changer mdp</a>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <a href="#" onClick={() => this.logout()}>Déconnection</a>

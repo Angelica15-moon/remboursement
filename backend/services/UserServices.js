@@ -120,7 +120,7 @@ function getUser(db, username) {
                 message: "Vous n'ête pas autorisé a utiliser cette fonction!"
             })
         }
-        const sql = "SELECT nom, prenom, adresse, email, tel FROM collecteur WHERE username = '" + username + "'";
+        const sql = "SELECT nom, prenom, adresse, email, tel, agence FROM collecteur WHERE username = '" + username + "'";
         db.query(sql, (err, results) => {
             if (err) {
                 console.error("Erreur lors de la récupération des collecteur :", err);

@@ -38,7 +38,6 @@ export default function PageProfil() {
                 setErrorMessage(error.message);
             });
     }
-    console.log("RESPONSE historique : " + historiques);
     useEffect(() => {
         getProfil();
     }, []);
