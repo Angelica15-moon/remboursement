@@ -20,10 +20,10 @@ function HistoriquePaiements() {
   const [filterText, setFilterText] = useState('');
   const [historiques, setHistoriques] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  const headersDoc = ["Ref Credit", "Montant payé", "Reste", "Agent", "Agence", "Numéro facture" ];
+  const headersDoc = ["Ref Credit", "Montant payé", "Reste", "Agent", "Agence", "Numéro facture"];
 
   function formatDate(dateString) {
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
@@ -52,7 +52,7 @@ function HistoriquePaiements() {
       .catch((error) => {
         console.error("Erreur lors de la récupération des données Excel :", error);
       });
-    
+
   }, []);
 
   const handleRefChange = (e) => {
@@ -98,8 +98,8 @@ function HistoriquePaiements() {
     return (
       <Row>
         <Col>
-          <Button className='mb-3' size='sm' onClick={() => exportPDF()}>
-                <FontAwesomeIcon icon={faFilePdf} />
+          <Button variant='danger' className='mb-3' size='sm' onClick={() => exportPDF()}>
+            <FontAwesomeIcon icon={faFilePdf} />
           </Button>
           <InputGroup className="mb-3" size='sm'>
             <Form.Control size='sm'
@@ -119,11 +119,13 @@ function HistoriquePaiements() {
     const doc = new JsPDF(orientation, unit, size);
     doc.setFontSize(15);
     const title = "Releve de comptes " + selectedRef;
-  
+
+    console.log(historiques);
+
     // Vérifier si historiques existe et n'est pas vide
-    if (filteredItems && filteredItems.length > 0) {
+    if (historiques && historiques.length > 0) {
       // Mapping des données pour formater
-      const data = filteredItems.map((item) => new Historique(
+      const data = historiques.map((item) => new Historique(
         item.RefCredit,
         item.datePaiement,
         item.ResteApayer,
@@ -131,27 +133,20 @@ function HistoriquePaiements() {
         item.agence,
         item.numeroFacture
       ));
-  
+
       // Vérifier si la première ligne de données a toutes les propriétés nécessaires
       const firstDataRow = data[0];
-      const hasRequiredProperties = headersDoc.every(header => Object.prototype.hasOwnProperty.call(firstDataRow, header));
-  
-      if (hasRequiredProperties) {
-        // Formater le contenu pour autoTable
-        const headers = [headersDoc];
-        const content = {
-          startY: 50,
-          head: headers,
-          body: data
-        };
-  
-        // Générer le PDF
-        doc.text(title, marginLeft, 40);
-        doc.autoTable(content);
-        doc.save("Releve de comptes-" + selectedRef + ".pdf");
-      } else {
-        alert("Les propriétés des données ne correspondent pas aux en-têtes.");
-      }
+      // Formater le contenu pour autoTable
+      const headers = [headersDoc];
+      const content = {
+        startY: 50,
+        head: headers,
+        body: data
+      };
+      // Générer le PDF
+      doc.text(title, marginLeft, 40);
+      doc.autoTable(content);
+      doc.save("Releve de comptes-" + selectedRef + ".pdf");
     } else {
       alert("Aucune donnée à exporter.");
     }
@@ -198,7 +193,7 @@ function HistoriquePaiements() {
 }
 
 class Historique {
-  constructor(refCredit, datePaiement, montantAPayer, resteApayer, collecteur, agence, numeroFacture){
+  constructor(refCredit, datePaiement, montantAPayer, resteApayer, collecteur, agence, numeroFacture) {
     this.refCredit = refCredit;
     this.datePaiement = datePaiement;
     this.montantAPayer = montantAPayer;

@@ -125,3 +125,11 @@ code {
 .rdt_TableHeadRow {
   background-color: turquoise !important;
 }
+
+#montantAPayer {
+  border: 2px solid #5e5555 !important;
+}
+
+#montantAPayer:focus {
+  border: 2px solid blueviolet !important;
+}

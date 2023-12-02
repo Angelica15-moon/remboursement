@@ -30,7 +30,6 @@ function Payments() {
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedRef, setSelectedRef] = useState("");
   const [montantAPayer, setMontantAPayer] = useState("");
-  const [datePaiement, setDatePaiement] = useState("");
   const [userConnected, setUserConnected] = useState(null);
   const collecteur = localStorage.getItem("user");
   const [agence, setAgence] = useState("");
@@ -41,25 +40,31 @@ function Payments() {
 
   function getProfil() {
     fetch(`http://localhost:3002/profil?user=${encodeURIComponent(collecteur)}`, {
-        method: 'GET', headers: {
-            'Content-Type': 'application/json'
-        }
+      method: 'GET', headers: {
+        'Content-Type': 'application/json'
+      }
     }).then((response) => response.json())
-        .then((data) => {
-          setUserConnected(data.results[0]);
-        }).catch((error) => {
-            setErrorMessage(error.message);
-        });
+      .then((data) => {
+        setUserConnected(data.results[0]);
+      }).catch((error) => {
+        setErrorMessage(error.message);
+      });
+  }
+
+  function formatDate() {
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    return new Date(Date.now()).toLocaleDateString(undefined, options);
   }
 
   const handleRemboursementSubmit = (e) => {
     e.preventDefault();
+    const formattedDate = new Date().toISOString().split('T')[0];
     const remboursementData = {
       montantAPayer,
-      datePaiement,
-      collecteur,
-      agence,
-      numeroFacture,
+      datePaiement: formattedDate,
+      collecteur: collecteur,
+      agence: userConnected.agence,
+      numeroFacture: numeroFacture,
       MontantAbandonne: selectedClient.MontantAbandonnee,
       refClient: selectedClient.RefClient,
     };
@@ -71,7 +76,6 @@ function Payments() {
       axios.post("http://localhost:3002/enregistrer-remboursement", remboursementData)
         .then((response) => {
           setMontantAPayer("");
-          setDatePaiement("");
           setMessage("Paiement remboursement enregistré avec succès !");
           setModalIsOpen(true);
         })
@@ -102,14 +106,12 @@ function Payments() {
       (c) =>
         c.RefClient === selectedRefValue || c.RefCredit === selectedRefValue
     );
-    setDatePaiement(datep.getDate());
     setSelectedClient(client);
     setAgence(userConnected.agence);
   }
 
   function clearData(params) {
     setMontantAPayer(0);
-    setDatePaiement("");
   }
 
   return (
@@ -171,22 +173,16 @@ function Payments() {
               )}
               <Row className='p-2'>
                 <Col>
-                <Form.Label className='small'><strong>Agent :&nbsp;{collecteur}</strong></Form.Label><br />
-                  <Form.Group className="mb-3">
-                    <Form.Label className='small' htmlFor="montantAPayer">Montant à payer :</Form.Label>
-                    <Form.Control type='number' id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
-                      required size='sm' onChange={(e) => setMontantAPayer(e.target.value)} />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label className='small' htmlFor="datePaiement">Date de paiement :</Form.Label>
-                    <Form.Control type='date' id="datePaiement" placeholder="Date de paiement :" required size='sm'
-                      value={datePaiement} onChange={(e) => setDatePaiement(e.target.value)} />
-                  </Form.Group>
+                  <Form.Label className='small'><strong>Agent :&nbsp;{collecteur}</strong></Form.Label><br />
+                  <Form.Label className='small'><strong>Agence :&nbsp;{agence}</strong></Form.Label><br />
+                  <Form.Label className='small'><strong>Numéro de facture :&nbsp;{numeroFacture}</strong></Form.Label><br />
                 </Col>
                 <Col>
-                <Form.Label className='small'><strong>Agence :&nbsp;{agence}</strong></Form.Label><br />
-                  <Form.Group xs={12} sm={6} className="mb-3">
-                    <Form.Label className='small' htmlFor="numeroFacture"><strong>Numéro de facture :&nbsp;{numeroFacture}</strong></Form.Label>
+                  <Form.Group className="mb-3">
+                    <Form.Label className='small'><strong>Date de paiement :&nbsp;{formatDate()}</strong></Form.Label><br />
+                    <Form.Label className='small' htmlFor="montantAPayer"><strong>Montant à payer :</strong></Form.Label>
+                    <Form.Control type='number' autoFocus id="montantAPayer" placeholder="Montant à payer" value={montantAPayer}
+                      required size='sm' onChange={(e) => setMontantAPayer(e.target.value)} />
                   </Form.Group>
                   <div className='text-end mt-2'>
                     <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>
