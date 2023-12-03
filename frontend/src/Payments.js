@@ -81,7 +81,7 @@ function Payments() {
         })
         .catch((error) => {
           console.error("Erreur lors de l'enregistrement du remboursement :", error);
-          setMessage("Erreur lors de l'enregistrement du remboursement.");
+          setMessage(error.response.data.message);
           setModalIsOpen(true);
         });
     }
