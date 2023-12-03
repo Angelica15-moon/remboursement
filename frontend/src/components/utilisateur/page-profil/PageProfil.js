@@ -6,10 +6,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import DataTable from 'react-data-table-component';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+import FormLabel from 'react-bootstrap/esm/FormLabel';
 
 export default function PageProfil() {
     const [user, setUsers] = useState();
-    const [ historiques, setHistoriques ] = useState([]);
+    const [historiques, setHistoriques] = useState([]);
     const [error, setErrorMessage] = useState("");
     const [filterText, setFilterText] = useState('');
 
@@ -26,18 +27,17 @@ export default function PageProfil() {
                 setErrorMessage(error.message);
             });
 
-            fetch(`http://localhost:3002/historique-utilisateur?user=${encodeURIComponent(userConnected)}`, {
-                method: 'GET', headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-                .then((data) => {
-                    setHistoriques(data.results);
-                }).catch((error) => {
-                    setErrorMessage(error.message);
-                });
+        fetch(`http://localhost:3002/historique-utilisateur?user=${encodeURIComponent(userConnected)}`, {
+            method: 'GET', headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => response.json())
+            .then((data) => {
+                setHistoriques(data.results);
+            }).catch((error) => {
+                setErrorMessage(error.message);
+            });
     }
-    console.log("RESPONSE historique : " + historiques);
     useEffect(() => {
         getProfil();
     }, []);
@@ -58,13 +58,17 @@ export default function PageProfil() {
         selectAllRowsItemText: 'Tous',
     };
 
-    const filteredItems = historiques && historiques.filter(
-        item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.RefClient && item.RefClient.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.RefCredit && item.RefCredit.toLowerCase().includes(filterText.toLowerCase())) ||
-            (item.numeroFacture && item.numeroFacture.toLowerCase().includes(filterText.toLowerCase())),
-    ) || [];
-    
+    const filteredItems = useMemo(
+        () => historiques && historiques.filter(
+            item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.RefClient && item.RefClient.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.RefCredit && item.RefCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.montantAPayer && item.montantAPayer.toString().includes(filterText.toLowerCase())) ||
+                (item.datePaiement && item.datePaiement.toString().includes(filterText.toLowerCase())) ||
+                (item.numeroFacture && item.numeroFacture.toLowerCase().includes(filterText.toLowerCase())),
+        ), [historiques, filterText]
+    );
+
     const subHeaderComponentMemo = useMemo(() => {
         return (
             <Row>
@@ -77,7 +81,7 @@ export default function PageProfil() {
                 </Col>
             </Row>
         );
-    });
+    }, []);
 
     return (
         <div className='p-3 pt-0'>
@@ -97,6 +101,9 @@ export default function PageProfil() {
                                 </Col>
                             </Row>
                             <hr />
+                            {error && (
+                                <FormLabel className='text-danger'>{error}</FormLabel>
+                            )}
                             <DataTable className='table table-bordered' data={filteredItems} columns={columns} dense direction="auto"
                                 pagination paginationComponentOptions={paginationComponentOptions} fixedHeader
                                 fixedHeaderScrollHeight="350px" highlightOnHover pointerOnHover persistTableHead responsive
@@ -108,14 +115,4 @@ export default function PageProfil() {
             </Card>
         </div>
     );
-}
-
-class Utilisateur {
-    constructor(nom, prenom, adresse, telephone, email) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.adresse = adresse;
-        this.telephone = telephone;
-        this.email = email;
-    }
 }

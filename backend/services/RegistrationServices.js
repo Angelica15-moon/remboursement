@@ -17,10 +17,10 @@ function RegistrationServices(db, agent) {
                 message: "Agent ou collecteur invalide : "
             });
         }
-        const sql = "INSERT INTO collecteur (nom, prenom, adresse, username, password, email, role, tel, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        const sql = "INSERT INTO collecteur (nom, prenom, adresse, username, password, email, role, tel, active, agence) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         db.query(sql, [
             agent.nom, agent.prenom, agent.adresse, agent.username,
-            hashPassword(agent.password), agent.email, agent.role, agent.tel, true
+            hashPassword(agent.password), agent.email, agent.role, agent.tel, true, agent.agence
         ], (err, results) => {
             if (err) {
                 console.error("Erreur lors de l'enregistrement du collecteur : ", err);

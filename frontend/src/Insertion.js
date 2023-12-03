@@ -7,38 +7,25 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 export default function App() {
   const [excelData, setExcelData] = useState(null);
-
   const handleExcelUpload = (e) => {
     const file = e.target.files[0];
-
     if (file) {
       const reader = new FileReader();
-
       reader.onload = (e) => {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
-
         const worksheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(worksheet);
-
-
-
         console.log('Données Excel chargées:', parsedData);
         setExcelData(parsedData);
       };
-
       reader.readAsArrayBuffer(file);
     }
   };
 
   const handleImportExcel = () => {
-
-
     if (excelData) {
-
-
-
       const mappedData = excelData.map((row) => ({
         RefClient: row.RefClient,
         RefCredit: row.RefCredit,

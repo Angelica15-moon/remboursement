@@ -15,11 +15,6 @@ db.query(sql, (err, results) => {
         });
     }
 
-    console.log("============================================");
-    console.log(data.oldpassword);
-    console.log(comparePassword(data.oldpassword, results[0].password));
-    console.log("============================================");
-
     if (results.length) {
         if (!comparePassword(data.oldpassword, results[0].password)) {
             reject({

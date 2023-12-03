@@ -18,13 +18,14 @@ export default function Inscription() {
     const [cpassword, setCPassword] = useState("");
     const [role, setRole] = useState("");
     const [username, setUsername] = useState("");
+    const [agence, setAgence] = useState("");
 
     const handleUserFormSubimt = (e) => {
         e.preventDefault();
         if (password !== cpassword) {
             setErrorMessage("Les deux mots mot de passe ne correspond pas!");
         } else {
-            const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role);
+            const agent = new Utilisateur(nom, prenom, adresse, username, password, email, tel, role, agence);
             fetch('http://localhost:3002/resistration', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(agent),
@@ -39,8 +40,10 @@ export default function Inscription() {
     }
 
     const handleRoleChange = (e) => {
-        const selectedRefValue = e.target.value;
-        setRole(selectedRefValue);
+        setRole(e.target.value);
+    }
+    const handleAgenceChange = (e) => {
+        setAgence(e.target.value);
     }
 
     function clearData(params) {
@@ -82,6 +85,17 @@ export default function Inscription() {
                                     <Form.Label className='small' htmlFor="email">E-mail</Form.Label>
                                     <Form.Control type='email' id="email" placeholder="email" value={email}
                                         required size='sm' onChange={(e) => setEmail(e.target.value)} />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='small' htmlFor="agence">Agence</Form.Label>
+                                    <Form.Select aria-label="Agence" size='sm' id='agence' onChange={handleAgenceChange}
+                                        value={agence} aria-describedby="agence">
+                                        <option value="">Séléctione l'agence</option>
+                                        <option value="Andoranofotsy">Andoranofotsy</option>
+                                        <option value="Antananarivo">Antananarivo</option>
+                                        <option value="Tamatave">Tamatave</option>
+                                        <option value="Nosy Be">Nosy Be</option>
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                             <Col>
@@ -131,7 +145,7 @@ export default function Inscription() {
 }
 
 class Utilisateur {
-    constructor(nom, prenom, adresse, username, password, email, tel, role) {
+    constructor(nom, prenom, adresse, username, password, email, tel, role, agence) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -140,5 +154,6 @@ class Utilisateur {
         this.email = email;
         this.role = role;
         this.tel = tel;
+        this.agence = agence;
     }
 }

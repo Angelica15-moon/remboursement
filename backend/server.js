@@ -4,7 +4,8 @@ const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
-const { getAllUsers, changerMotDePasse, getUser, getUserHistory } = require('./services/UserServices');
+const { getAllUsers, changerMotDePasse, getUser, getUserHistory, desactivateUser } = require('./services/UserServices');
+const { getCustomersHistory } = require('./services/CustomerServices');
 
 const app = express();
 
@@ -43,18 +44,20 @@ function calculRestAPayer(refClient, remboursement) {
 
     db.query(sql_client, (err, result) => {
       if (err) {
-        console.error("Erreur lors de la récupération des clients :", err);
-        reject("Erreur lors de la récupération des clients.");
-        return;
+        reject({
+          code: 402,
+          message: "Erreur lors de la verification du clients."
+        });
       }
       client = result[0].montantAbandonnee;
     });
 
     db.query(sql_payements, (err, results) => {
       if (err) {
-        console.error("Erreur lors de la récupération des clients :", err);
-        reject("Erreur lors de la récupération des clients.");
-        return;
+        reject({
+          code: 402,
+          message: "Erreur lors de l'enregistrement du remboursement."
+        });
       }
       for (resp of results) {
         remboursement += resp.montantAPayer
@@ -62,7 +65,14 @@ function calculRestAPayer(refClient, remboursement) {
       // Traitement des résultats ici, par exemple, pour calculer le solde restant.
       if (client && remboursement) {
         const soldeRestant = client - remboursement;
-        resolve(soldeRestant);
+        if (soldeRestant <= 0) {
+          reject({
+            code: 402,
+            message: "Ce client n'a plus de rest a payer."
+          });
+        } else {
+          resolve(soldeRestant);
+        }
       } else {
         resolve(client);
       }
@@ -82,7 +92,7 @@ async function executionCalulRestApayer(refClient, remboursement) {
     return soldeRestant;
   } catch (error) {
     console.error("Une erreur s'est produite :", error);
-    return;
+    return error;
   }
 }
 
@@ -106,10 +116,8 @@ app.post("/enregistrer-remboursement", async (req, res) => {
   if (!remboursementData) {
     return res.status(400).json({ error: "Données de remboursement invalides." });
   }
-
   const insertRemboursementSQL =
     "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, ResteApayer) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
   const {
     montantAPayer,
     datePaiement,
@@ -118,9 +126,10 @@ app.post("/enregistrer-remboursement", async (req, res) => {
     numeroFacture,
     refClient
   } = remboursementData;
-
   const restApayer = await executionCalulRestApayer(refClient, montantAPayer);
-
+  if (restApayer.code) {
+    return res.status(restApayer.code).json(restApayer);
+  }
   db.query(
     insertRemboursementSQL,
     [montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, restApayer],
@@ -129,7 +138,6 @@ app.post("/enregistrer-remboursement", async (req, res) => {
         console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
         return res.status(500).json({ error: "Erreur lors de l'enregistrement des données de remboursement." });
       }
-
       return res.status(200).json({ message: "Données de remboursement enregistrées avec succès." });
     }
   );
@@ -269,6 +277,29 @@ app.get("/historique-utilisateur", async (req, res) => {
     console.error(error);
     return res.status(error.code).json(error);
   }
+});
+
+app.get("/historique-client", async (req, res) => {
+  const client = req.query.client;
+  try {
+    const result = await getCustomersHistory(db, client);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+});
+
+app.post('/desactive-user', async (req, res) => {
+  const data = req.body;
+  try {
+    const result = await desactivateUser(db, data);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
+
 });
 
 app.listen(port, () => {
