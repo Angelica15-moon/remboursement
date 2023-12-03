@@ -88,8 +88,8 @@ export default function Inscription() {
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label className='small' htmlFor="agence">Agence</Form.Label>
-                                    <Form.Select aria-label="Role" size='sm' id='agence' onChange={handleAgenceChange}
-                                        value={role} aria-describedby="agence">
+                                    <Form.Select aria-label="Agence" size='sm' id='agence' onChange={handleAgenceChange}
+                                        value={agence} aria-describedby="agence">
                                         <option value="">Séléctione l'agence</option>
                                         <option value="Andoranofotsy">Andoranofotsy</option>
                                         <option value="Antananarivo">Antananarivo</option>
