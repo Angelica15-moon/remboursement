@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import JsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
 
 function HistoriquePaiements() {
   const [excelData, setExcelData] = useState([]);
@@ -96,145 +95,36 @@ function HistoriquePaiements() {
     [listHistorique, filterText]
   );
 
-  // Create styles
-  const styles = StyleSheet.create({
-    page: {
-      flexDirection: 'column',
-    },
-    section: {
-      margin: 10,
-      padding: 10,
-      flexGrow: 1,
-    },
-    table: {
-      display: 'table',
-      borderStyle: 'solid',
-      borderWidth: 1,
-      borderRightWidth: 1,
-      borderBottomWidth: 1,
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    header: {
-      backgroundColor: '#f0f0f0',
-    },
-    cell: {
-      fontSize: 10,
-      padding: 3,
-      borderStyle: 'solid',
-      borderWidth: 1,
-      borderRightWidth: 0,
-      borderBottomWidth: 0,
-    },
-    bold: {
-      fontWeight: 'bold',
-    },
-  });
-
-  // Create Document Component
-  const DataToExportOnPDF = () => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={[styles.bold]}>Reference client : {selectedRef}</Text>
-          <Text style={[styles.bold]}>Nom client : {clients.nom}</Text>
-          <View style={styles.table}>
-            <View style={[styles.row, styles.bold, styles.header]}>
-              <Text style={[styles.cell, styles.row1]}>Ref Credit</Text>
-              <Text style={[styles.cell, styles.row2]}>Date de paiement</Text>
-              <Text style={[styles.cell, styles.row3]}>Montant payé</Text>
-              <Text style={[styles.cell, styles.row4]}>Reste à payer</Text>
-              <Text style={[styles.cell, styles.row5]}>Agent</Text>
-              <Text style={[styles.cell, styles.row6]}>Agence</Text>
-              <Text style={[styles.cell, styles.row7]}>Numéro facture</Text>
-            </View>
-            {listHistorique.map((row, i) => (
-              <View key={i} style={styles.row} wrap={false}>
-                <Text style={[styles.cell, styles.row1]}>{row.refCredit}</Text>
-                <Text style={[styles.cell, styles.row2]}>{row.datePaiement}</Text>
-                <Text style={[styles.cell, styles.row3]}>{row.montantAPayer}</Text>
-                <Text style={[styles.cell, styles.row4]}>{row.resteApayer}</Text>
-                <Text style={[styles.cell, styles.row5]}>{row.collecteur}</Text>
-                <Text style={[styles.cell, styles.row6]}>{row.agence}</Text>
-                <Text style={[styles.cell, styles.row7]}>{row.numeroFacture}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </Page>
-    </Document>
-  );
-
-  function exportToPDF() {
-    if (listHistorique.length === 0) {
-      console.log('No data to export.');
-      return;
-    }
-    // Create a new jsPDF instance
-    const pdf = new JsPDF();
-    // Define the columns for the PDF table
-    const columns = ["Ref Credit", "Date de payement", "Montant payé", "Reste", "Agent", "Agence", "Numéro facture"]
-    // Create an empty data array for the table
-    const data = [];
-    // Populate the data array with employes' information
-    listHistorique.forEach(item => {
-      const hist = new Historique(
-        item.refCredit, formatDate(item.datePaiement), item.montantAPayer, item.resteApayer,
-        item.collecteur, item.agence, item.numeroFacture);
-      data.push(hist);
-    });
-    // Add the table to the PDF using jspdf-autotable
-    pdf.autoTable({
-      head: [columns],
-      body: data,
-    });
-
-    // Save the PDF with a specific filename
-    pdf.save('document_test.pdf');
+  const generatePdf = (ref, list) => {
+    const doc = new JsPDF();
+    const title = "Releve de comptes " + ref;
+    const columns = [
+      { title: 'Ref Credit', dataKey: 'refCredit' },
+      { title: 'Date de paiement', dataKey: 'datePaiement' },
+      { title: 'Montant payé', dataKey: 'montantAPayer' },
+      { title: 'Reste à payer', dataKey: 'resteApayer' },
+      { title: 'Agent', dataKey: 'collecteur' },
+      { title: 'Agence', dataKey: 'agence' },
+      { title: 'Numéro facture', dataKey: 'numeroFacture' },
+    ];
+    const rows = list.map(row => ({
+      refCredit: row.refCredit,
+      datePaiement: row.datePaiement,
+      montantAPayer: row.montantAPayer,
+      resteApayer: row.resteApayer,
+      collecteur: row.collecteur,
+      agence: row.agence,
+      numeroFacture: row.numeroFacture,
+    }));
+    doc.text(title, 15, 10);
+    doc.text(clients.nom , 15, 16);
+    doc.text("Id client : " + clients.id, 15, 22);
+    doc.text("Reférence crédit : " + clients.RefCredit, 15, 28);
+    doc.text("Montant Abandonnée : " + clients.MontantAbandonnee, 15, 34);
+    doc.autoTable({startY: 40, columns, body: rows });
+    doc.save(`Releve_de_comptes_${ref}`);
   };
-  /*
-  function exportTo(extention) {
-    const unit = "pt";
-    const size = "A4";
-    const orientation = "portrait";
-    const marginLeft = 40;
-    const doc = new JsPDF(orientation, unit, size);
-    doc.setFontSize(15);
-    const title = "Releve de comptes " + selectedRef;
-    if (listHistorique.length === 0) {
-      console.log('No data to export.');
-      return;
-    }
-    const headers = [["Ref Credit", "Montant payé", "Reste", "Agent", "Agence", "Numéro facture"]];
-    doc.text(title, marginLeft, 40);
 
-    const pdf = [];
-    fetch(`http://localhost:3002/historique-client?client=${encodeURIComponent(selectedRef)}`, {
-      method: 'GET', headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((response) => response.json())
-      .then((data) => {
-        data.results.forEach(item => {
-          const hist = new Historique(
-            item.refCredit, formatDate(item.datePaiement), item.montantAPayer, item.resteApayer,
-            item.collecteur, item.agence, item.numeroFacture);
-          pdf.push(hist);
-        });
-        // Générer le PDF
-        doc.autoTable({
-          startY: 50,
-          head: headers,
-          body: data.results,
-        });
-      }).catch((error) => {
-        setErrorMessage(error.message);
-      });
-
-    doc.save("Releve de comptes-" + selectedRef + extention);
-  }
-  */
   const subHeaderComponentMemo = useMemo(() => {
     return (
       <Row>
@@ -269,16 +159,11 @@ function HistoriquePaiements() {
             </Col>
             <Col className='show-on-pc'></Col>
             <Col className='show-on-pc'></Col>
-            <Col>
-              <PDFDownloadLink document={<DataToExportOnPDF />} fileName="document_test.pdf">
-                {({ blob, url, loading, error }) =>
-                  loading ? 'Chargement du PDF...' : 'Télécharger le PDF'
-                }
-              </PDFDownloadLink>
-              <Button variant='danger' className='mb-3 mx-2' size='sm' onClick={() => exportToPDF()}>
+            <Col className='text-end'>
+              <Button variant='danger' className='mb-3 mx-2' size='sm' onClick={() => generatePdf(selectedRef +".pdf", listHistorique)}>
                 <FontAwesomeIcon icon={faFilePdf} />
               </Button>
-              <Button variant='success' className='mb-3' size='sm' onClick={() => exportToPDF()}>
+              <Button variant='success' className='mb-3' size='sm' onClick={() => generatePdf(selectedRef +".csv", listHistorique)}>
                 <FontAwesomeIcon icon={faFileExcel} />
               </Button>
             </Col>
