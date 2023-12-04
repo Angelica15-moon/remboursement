@@ -43,8 +43,8 @@ export default function PageProfil() {
     }, []);
 
     const columns = [
-        { name: 'Ref Client', selector: row => row.RefClient, sortable: true },
-        { name: 'Ref Credit', selector: row => row.RefCredit, sortable: true },
+        { name: 'Ref Client', selector: row => row.refClient, sortable: true },
+        { name: 'Ref Credit', selector: row => row.refCredit, sortable: true },
         { name: 'Nom Client', selector: row => row.nom, sortable: true },
         { name: 'date', selector: row => row.datePaiement, sortable: true },
         { name: 'Montant', selector: row => row.montantAPayer, sortable: true },
@@ -58,15 +58,25 @@ export default function PageProfil() {
         selectAllRowsItemText: 'Tous',
     };
 
+    function formatDate(dateString) {
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+    let listHistorique = historiques && historiques.map(item => new Historique(
+        item.RefClient, item.RefCredit, item.nom, formatDate(item.datePaiement),
+        item.montantAPayer, item.numeroFacture
+    ));
+
     const filteredItems = useMemo(
-        () => historiques && historiques.filter(
+        () => listHistorique && listHistorique.filter(
             item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.RefClient && item.RefClient.toLowerCase().includes(filterText.toLowerCase())) ||
-                (item.RefCredit && item.RefCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
+                (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
                 (item.montantAPayer && item.montantAPayer.toString().includes(filterText.toLowerCase())) ||
                 (item.datePaiement && item.datePaiement.toString().includes(filterText.toLowerCase())) ||
                 (item.numeroFacture && item.numeroFacture.toLowerCase().includes(filterText.toLowerCase())),
-        ), [historiques, filterText]
+        ), [listHistorique, filterText]
     );
 
     const subHeaderComponentMemo = useMemo(() => {
@@ -115,4 +125,15 @@ export default function PageProfil() {
             </Card>
         </div>
     );
+}
+
+class Historique {
+    constructor(refClient, refCredit, nom, datePaiement, montantAPayer, numeroFacture) {
+        this.refClient = refClient;
+        this.refCredit = refCredit;
+        this.nom = nom;
+        this.datePaiement = datePaiement;
+        this.montantAPayer = montantAPayer;
+        this.numeroFacture = numeroFacture;
+    }
 }
