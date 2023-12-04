@@ -160,12 +160,13 @@ function HistoriquePaiements() {
             <Col className='show-on-pc'></Col>
             <Col className='show-on-pc'></Col>
             <Col className='text-end'>
-              <Button variant='danger' className='mb-3 mx-2' size='sm' onClick={() => generatePdf(selectedRef +".pdf", listHistorique)}>
-                <FontAwesomeIcon icon={faFilePdf} />
-              </Button>
-              <Button variant='success' className='mb-3' size='sm' onClick={() => generatePdf(selectedRef +".csv", listHistorique)}>
-                <FontAwesomeIcon icon={faFileExcel} />
-              </Button>
+              {clients && (
+                <><Button variant='danger' className='mb-3 mx-2' size='sm' onClick={() => generatePdf(selectedRef + ".pdf", listHistorique)}>
+                  <FontAwesomeIcon icon={faFilePdf} />
+                </Button><Button variant='success' className='mb-3' size='sm' onClick={() => generatePdf(selectedRef + ".csv", listHistorique)}>
+                    <FontAwesomeIcon icon={faFileExcel} />
+                  </Button></>
+              )}
             </Col>
           </Row>
           <hr className='mb-3' />
