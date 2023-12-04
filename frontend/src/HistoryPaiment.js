@@ -97,7 +97,8 @@ function HistoriquePaiements() {
 
   const generatePdf = (ref, list) => {
     const doc = new JsPDF();
-    const title = "Releve de comptes " + ref;
+    const reference = ref.split(".");
+    const title = "Releve de comptes " + reference[0];
     const columns = [
       { title: 'Ref Credit', dataKey: 'refCredit' },
       { title: 'Date de paiement', dataKey: 'datePaiement' },
@@ -116,12 +117,13 @@ function HistoriquePaiements() {
       agence: row.agence,
       numeroFacture: row.numeroFacture,
     }));
+
     doc.text(title, 15, 10);
     doc.text(clients.nom , 15, 16);
     doc.text("Id client : " + clients.id, 15, 22);
     doc.text("Reférence crédit : " + clients.RefCredit, 15, 28);
     doc.text("Montant Abandonnée : " + clients.MontantAbandonnee, 15, 34);
-    doc.autoTable({startY: 40, columns, body: rows });
+    doc.autoTable({startY: 40, styles: {lineWidth: 0.1, lineColor: 'black'}, columns, body: rows });
     doc.save(`Releve_de_comptes_${ref}`);
   };
 
