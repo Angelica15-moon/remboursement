@@ -118,7 +118,7 @@ code {
 }
 
 .card-header {
-  background-color: blueviolet !important;
+  background-color: rgb(47, 76, 205) !important;
   color: beige !important;
 }
 
@@ -133,3 +133,7 @@ code {
 #montantAPayer:focus {
   border: 2px solid blueviolet !important;
 }
+#logo-cefor{
+  background-color: #fff !important; 
+}
+

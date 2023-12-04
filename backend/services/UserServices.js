@@ -189,6 +189,7 @@ function getUserHistory(db, username) {
 function desactivateUser(db, data) {
 
     return new Promise((resolve, reject) => {
+        var active ;
         const sql = "SELECT * FROM collecteur WHERE username='" + data.user + "'";
         db.query(sql, (err, results) => {
             if (err) {
@@ -214,9 +215,10 @@ function desactivateUser(db, data) {
                     message: "Compte utilisateur innactif."
                 });
             }
+            active = results[0].active;
         });
 
-        const sql_update_user = "UPDATE collecteur SET active = " + false + " WHERE username='" + data.user + "'";
+        const sql_update_user = "UPDATE collecteur SET active = " + !active + " WHERE username='" + data.user + "'";
         db.query(sql_update_user, (err, results) => {
             if (err) {
                 console.error("Erreur lors de la modifications de mot de passe :", err);
