@@ -119,6 +119,7 @@ function HistoriquePaiements() {
     }));
 
     doc.text(title, 15, 10);
+    doc.text("Date : " + formatDate(Date.now()), 130, 10);
     doc.text(clients.nom , 15, 16);
     doc.text("Id client : " + clients.id, 15, 22);
     doc.text("Reférence crédit : " + clients.RefCredit, 15, 28);
