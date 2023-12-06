@@ -80,7 +80,7 @@ function Payments() {
         .then((response) => {
           setMontantAPayer("");
           setMessage("Paiement remboursement enregistré avec succès !");
-          generateFacture(selectedClient, numeroFacture);
+          generateFacture(selectedClient, remboursementData);
           setModalIsOpen(true);
         })
         .catch((error) => {
@@ -104,7 +104,6 @@ function Payments() {
 
   const handleRefChange = (e) => {
     const selectedRefValue = e.target.value;
-    const datep = new Date();
     setSelectedRef(selectedRefValue);
     const client = clients.find(
       (c) =>
@@ -119,20 +118,23 @@ function Payments() {
   }
 
 
-  const generateFacture = (client, fact) => {
+  const generateFacture = (client, donnee) => {
     const doc = new JsPDF();
     const title = "FACTURE";
     const logoWidth = 30;
     const logoHeight = 10;
-    doc.addImage(logoImage, "PNG", 130, 30, logoWidth, logoHeight);
-    doc.text(title, 15, 40);
-    doc.text("Numero : " + fact, 15, 46);
-    doc.text("Date : " + formatDate(Date.now()), 15, 52);
-    doc.text("Reference client : " + client.RefClient, 15, 58);
-    doc.text("Reférence crédit : " + client.RefCredit, 15, 64);
-    doc.text(client.nom, 15, 70);
-    doc.text("Montant Abandonnée : " + client.MontantAbandonnee, 15, 76);
-    doc.save(`${fact}.pdf`);
+    const fontSize = 12;
+    doc.addImage(logoImage, "PNG", 10, 10, logoWidth, logoHeight);
+    doc.setFontSize(fontSize + 5);
+    doc.text(title, 15, 28);
+    doc.text(client.nom, 15, 34);
+    doc.setFontSize(fontSize);
+    doc.text("Numero : " + donnee.numeroFacture, 15, 40);
+    doc.text("Date : " + formatDate(Date.now()), 15, 46);
+    doc.text("Reference client : " + client.RefClient, 15, 52);
+    doc.text("Reférence crédit : " + client.RefCredit, 15, 58);
+    doc.text("Payement effectué : " + donnee.montantAPayer + " Ar", 15, 64);
+    doc.save(`${donnee.numeroFacture}.pdf`);
   };
 
   return (

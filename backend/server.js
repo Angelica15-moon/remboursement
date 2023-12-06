@@ -119,12 +119,7 @@ app.post("/enregistrer-remboursement", async (req, res) => {
   const insertRemboursementSQL =
     "INSERT INTO payments (montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient, ResteApayer) VALUES (?, ?, ?, ?, ?, ?, ?)";
   const {
-    montantAPayer,
-    datePaiement,
-    collecteur,
-    agence,
-    numeroFacture,
-    refClient
+    montantAPayer, datePaiement, collecteur, agence, numeroFacture, refClient
   } = remboursementData;
   const restApayer = await executionCalulRestApayer(refClient, montantAPayer);
   if (restApayer.code) {
@@ -138,7 +133,10 @@ app.post("/enregistrer-remboursement", async (req, res) => {
         console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
         return res.status(500).json({ error: "Erreur lors de l'enregistrement des données de remboursement." });
       }
-      return res.status(200).json({ message: "Données de remboursement enregistrées avec succès." });
+      return res.status(200).json({ 
+        message: "Données de remboursement enregistrées avec succès.",
+        data: result
+       });
     }
   );
 });
