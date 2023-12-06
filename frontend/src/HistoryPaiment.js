@@ -29,21 +29,12 @@ function HistoriquePaiements() {
 
   function getCustomersHistory(refClient) {
     fetch(
-      `http://localhost:3002/historique-client?client=${encodeURIComponent(
-        refClient
-      )}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
+      `http://localhost:3002/historique-client?client=${encodeURIComponent(refClient)}`, {
+      method: "GET", headers: { "Content-Type": "application/json", }
+    }).then((response) => response.json())
       .then((data) => {
         setHistoriques(data.results);
-      })
-      .catch((error) => {
+      }).catch((error) => {
         setErrorMessage(error.message);
       });
   }
@@ -74,19 +65,11 @@ function HistoriquePaiements() {
   const columns = [
     { name: "Ref Credit", selector: (row) => row.refCredit, sortable: true },
     { name: "Date", selector: (row) => row.datePaiement, sortable: true },
-    {
-      name: "Montant payé",
-      selector: (row) => row.montantAPayer,
-      sortable: true,
-    },
+    { name: "Montant payé", selector: (row) => row.montantAPayer, sortable: true },
     { name: "Reste", selector: (row) => row.resteApayer, sortable: true },
     { name: "Agent", selector: (row) => row.collecteur, sortable: true },
     { name: "Agence", selector: (row) => row.agence, sortable: true },
-    {
-      name: "Numéro facture",
-      selector: (row) => row.numeroFacture,
-      sortable: true,
-    },
+    { name: "Numéro facture", selector: (row) => row.numeroFacture, sortable: true },
   ];
 
   const paginationComponentOptions = {
@@ -100,14 +83,8 @@ function HistoriquePaiements() {
     historiques &&
     historiques.map(
       (item) =>
-        new Historique(
-          item.RefCredit,
-          formatDate(item.datePaiement),
-          item.montantAPayer,
-          item.ResteApayer,
-          item.collecteur,
-          item.agence,
-          item.numeroFacture
+        new Historique(item.RefCredit, formatDate(item.datePaiement), item.montantAPayer, item.ResteApayer,
+          item.collecteur, item.agence, item.numeroFacture
         )
     );
 
@@ -116,22 +93,13 @@ function HistoriquePaiements() {
       listHistorique &&
       listHistorique.filter(
         (item) =>
-          (item.refCredit &&
-            item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
-          (item.datePaiement &&
-            item.datePaiement
-              .toLowerCase()
-              .includes(filterText.toLowerCase())) ||
-          (item.montantAPayer &&
-            item.montantAPayer.toString().includes(filterText.toLowerCase())) ||
-          (item.resteApayer &&
-            item.resteApayer.toString().includes(filterText.toLowerCase())) ||
-          (item.collecteur &&
-            item.collecteur.toLowerCase().includes(filterText.toLowerCase())) ||
-          (item.agence &&
-            item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
-          (item.numeroFacture &&
-            item.numeroFacture.toLowerCase().includes(filterText.toLowerCase()))
+          (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
+          (item.datePaiement && item.datePaiement.toLowerCase().includes(filterText.toLowerCase())) ||
+          (item.montantAPayer && item.montantAPayer.toString().includes(filterText.toLowerCase())) ||
+          (item.resteApayer && item.resteApayer.toString().includes(filterText.toLowerCase())) ||
+          (item.collecteur && item.collecteur.toLowerCase().includes(filterText.toLowerCase())) ||
+          (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
+          (item.numeroFacture && item.numeroFacture.toLowerCase().includes(filterText.toLowerCase()))
       ),
     [listHistorique, filterText]
   );
@@ -182,12 +150,8 @@ function HistoriquePaiements() {
       <Row>
         <Col>
           <InputGroup className="mb-3" size="sm">
-            <Form.Control
-              size="sm"
-              onChange={(e) => setFilterText(e.target.value)}
-              placeholder="Rechercher"
-              aria-label="Rechercher"
-              aria-describedby="rechercher"
+            <Form.Control size="sm" onChange={(e) => setFilterText(e.target.value)} placeholder="Rechercher"
+              aria-label="Rechercher" aria-describedby="rechercher"
             />
           </InputGroup>
         </Col>
@@ -204,13 +168,8 @@ function HistoriquePaiements() {
             <Col xs={12} sm={6} lg={3}>
               <InputGroup className="mb-3">
                 <InputGroup.Text id="ref-client">Ref Client</InputGroup.Text>
-                <Form.Select
-                  aria-label="Reference client"
-                  size="sm"
-                  value={selectedRef}
-                  aria-describedby="ref-client"
-                  onChange={handleRefChange}
-                >
+                <Form.Select aria-label="Reference client" size="sm" value={selectedRef}
+                  aria-describedby="ref-client" onChange={handleRefChange}>
                   <option>Ref Client</option>
                   {excelData.map((client) => (
                     <option key={client.id} value={client.RefClient}>
@@ -225,24 +184,10 @@ function HistoriquePaiements() {
             <Col className="text-end">
               {clients && (
                 <>
-                  <Button
-                    variant="danger"
-                    className="mb-3 mx-2"
-                    size="sm"
-                    onClick={() =>
-                      generatePdf(selectedRef + ".pdf", listHistorique)
-                    }
-                  >
+                  <Button variant="danger" className="mb-3 mx-2" size="sm" onClick={() => generatePdf(selectedRef + ".pdf", listHistorique)}>
                     <FontAwesomeIcon icon={faFilePdf} />
                   </Button>
-                  <Button
-                    variant="success"
-                    className="mb-3"
-                    size="sm"
-                    onClick={() =>
-                      generatePdf(selectedRef + ".csv", listHistorique)
-                    }
-                  >
+                  <Button variant="success" className="mb-3" size="sm" onClick={() => generatePdf(selectedRef + ".csv", listHistorique)}>
                     <FontAwesomeIcon icon={faFileExcel} />
                   </Button>
                 </>
@@ -255,23 +200,10 @@ function HistoriquePaiements() {
           )}
           {clients && (
             <div className="px-3 mb-3">
-              <DataTable
-                className="table table-bordered"
-                title={clients.nom}
-                columns={columns}
-                data={filteredItems}
-                dense
-                direction="auto"
-                pagination
-                paginationComponentOptions={paginationComponentOptions}
-                fixedHeader
-                fixedHeaderScrollHeight="305px"
-                highlightOnHover
-                pointerOnHover
-                persistTableHead
-                responsive
-                subHeader
-                subHeaderComponent={subHeaderComponentMemo}
+              <DataTable className="table table-bordered" title={clients.nom} columns={columns} data={filteredItems}
+                dense direction="auto" pagination paginationComponentOptions={paginationComponentOptions}
+                fixedHeader fixedHeaderScrollHeight="305px" highlightOnHover pointerOnHover persistTableHead
+                responsive subHeader subHeaderComponent={subHeaderComponentMemo}
               />
             </div>
           )}
@@ -282,15 +214,7 @@ function HistoriquePaiements() {
 }
 
 class Historique {
-  constructor(
-    refCredit,
-    datePaiement,
-    montantAPayer,
-    resteApayer,
-    collecteur,
-    agence,
-    numeroFacture
-  ) {
+  constructor(refCredit, datePaiement, montantAPayer, resteApayer, collecteur, agence, numeroFacture) {
     this.refCredit = refCredit;
     this.datePaiement = datePaiement;
     this.montantAPayer = montantAPayer;

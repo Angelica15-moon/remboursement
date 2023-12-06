@@ -8,6 +8,9 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
+import JsPDF from "jspdf";
+import "jspdf-autotable";
+import logoImage from "./assets/logo/logo.png";
 
 Modal.setAppElement('#root');
 
@@ -77,6 +80,7 @@ function Payments() {
         .then((response) => {
           setMontantAPayer("");
           setMessage("Paiement remboursement enregistré avec succès !");
+          generateFacture(selectedClient, numeroFacture);
           setModalIsOpen(true);
         })
         .catch((error) => {
@@ -113,6 +117,23 @@ function Payments() {
   function clearData(params) {
     setMontantAPayer(0);
   }
+
+
+  const generateFacture = (client, fact) => {
+    const doc = new JsPDF();
+    const title = "FACTURE";
+    const logoWidth = 30;
+    const logoHeight = 10;
+    doc.addImage(logoImage, "PNG", 130, 30, logoWidth, logoHeight);
+    doc.text(title, 15, 40);
+    doc.text("Numero : " + fact, 15, 46);
+    doc.text("Date : " + formatDate(Date.now()), 15, 52);
+    doc.text("Reference client : " + client.RefClient, 15, 58);
+    doc.text("Reférence crédit : " + client.RefCredit, 15, 64);
+    doc.text(client.nom, 15, 70);
+    doc.text("Montant Abandonnée : " + client.MontantAbandonnee, 15, 76);
+    doc.save(`${fact}.pdf`);
+  };
 
   return (
     <div className='p-3 pt-0'>

@@ -4,7 +4,7 @@ const cors = require("cors");
 const xlsx = require('xlsx');
 const { LoginService } = require('./services/LoginService');
 const { RegistrationServices } = require("./services/RegistrationServices");
-const { getAllUsers, changerMotDePasse, getUser, getUserHistory, desactivateUser } = require('./services/UserServices');
+const { getAllUsers, changerMotDePasse, getUser, getUserHistory, desactivateUser, reactivateUser } = require('./services/UserServices');
 const { getCustomersHistory } = require('./services/CustomerServices');
 
 const app = express();
@@ -13,8 +13,8 @@ const port = 3002;
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "", // Mot de passe de la base de données
+  user: "luca",
+  password: "Just$Me12", // Mot de passe de la base de données
   database: "remboursement",
 });
 
@@ -300,6 +300,17 @@ app.post('/desactive-user', async (req, res) => {
     return res.status(error.code).json(error);
   }
 
+});
+
+app.post('/reactive-user', async (req, res) => {
+  const data = req.body;
+  try {
+    const result = await reactivateUser(db, data);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(error.code).json(error);
+  }
 });
 
 app.listen(port, () => {

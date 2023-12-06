@@ -189,7 +189,6 @@ function getUserHistory(db, username) {
 function desactivateUser(db, data) {
 
     return new Promise((resolve, reject) => {
-        var active ;
         const sql = "SELECT * FROM collecteur WHERE username='" + data.user + "'";
         db.query(sql, (err, results) => {
             if (err) {
@@ -215,10 +214,9 @@ function desactivateUser(db, data) {
                     message: "Compte utilisateur innactif."
                 });
             }
-            active = results[0].active;
         });
 
-        const sql_update_user = "UPDATE collecteur SET active = " + !active + " WHERE username='" + data.user + "'";
+        const sql_update_user = "UPDATE collecteur SET active = " + false + " WHERE username='" + data.user + "'";
         db.query(sql_update_user, (err, results) => {
             if (err) {
                 console.error("Erreur lors de la modifications de mot de passe :", err);
@@ -235,7 +233,68 @@ function desactivateUser(db, data) {
             }
             resolve({
                 code: 200,
-                message: "Compte desactive avrc success."
+                message: "Compte desactive avec success."
+            });
+        });
+
+    });
+}
+
+
+/**
+ * reactivation compte utilisateur
+ * @param {*} db 
+ * @param {*} data 
+ * @returns 
+ */
+function reactivateUser(db, data) {
+
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM collecteur WHERE username='" + data.user + "'";
+        db.query(sql, (err, results) => {
+            if (err) {
+                isChange = false;
+                console.error("Erreur lors de la récupération des collecteur :", err);
+                reject({
+                    code: 500,
+                    message: "Erreur lors de la récupération des collecteur."
+                });
+            }
+
+            if (results.length === 0) {
+                isChange = false;
+                reject({
+                    code: 500,
+                    message: "Aucun utilisateur trouver avec l'identifiant : " + data.user
+                });
+            }
+
+            if (!results[0].active) {
+                resolve({
+                    code: 200,
+                    message: "Compte utilisateur actif."
+                });
+            }
+        });
+
+        const sql_update_user = "UPDATE collecteur SET active = " + true + " WHERE username='" + data.user + "'";
+        db.query(sql_update_user, (err, results) => {
+            if (err) {
+                console.error("Erreur lors de la modifications de mot de passe :", err);
+                reject({
+                    code: 500,
+                    message: "Erreur lors de la modifications de mot de passe."
+                });
+            }
+            if (results.length === 0) {
+                reject({
+                    code: 500,
+                    message: "Aucun utilisateur trouver."
+                });
+            }
+            resolve({
+                code: 200,
+                message: "Compte active avec success."
             });
         });
 
@@ -247,5 +306,6 @@ module.exports = {
     changerMotDePasse,
     getUser,
     getUserHistory,
-    desactivateUser
+    desactivateUser,
+    reactivateUser
 };
