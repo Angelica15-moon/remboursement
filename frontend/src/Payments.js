@@ -79,8 +79,9 @@ function Payments() {
       axios.post("http://localhost:3002/enregistrer-remboursement", remboursementData)
         .then((response) => {
           setMontantAPayer("");
-          setMessage("Paiement remboursement enregistré avec succès !");
-          generateFacture(selectedClient, remboursementData);
+          console.log();
+          setMessage(response.data.message);
+          generateFacture(selectedClient, remboursementData, response.data.rest);
           setModalIsOpen(true);
         })
         .catch((error) => {
@@ -118,13 +119,13 @@ function Payments() {
   }
 
 
-  const generateFacture = (client, donnee) => {
+  const generateFacture = (client, donnee, rest) => {
     const doc = new JsPDF();
     const title = "FACTURE";
     const logoWidth = 30;
     const logoHeight = 10;
     const fontSize = 12;
-    doc.addImage(logoImage, "PNG", 10, 10, logoWidth, logoHeight);
+    doc.addImage(logoImage, "PNG", 14, 10, logoWidth, logoHeight);
     doc.setFontSize(fontSize + 5);
     doc.text(title, 15, 28);
     doc.text(client.nom, 15, 34);
@@ -134,6 +135,7 @@ function Payments() {
     doc.text("Reference client : " + client.RefClient, 15, 52);
     doc.text("Reférence crédit : " + client.RefCredit, 15, 58);
     doc.text("Payement effectué : " + donnee.montantAPayer + " Ar", 15, 64);
+    doc.text("Reste a payé : " + rest + " Ar", 15, 70);
     doc.save(`${donnee.numeroFacture}.pdf`);
   };
 
@@ -225,21 +227,10 @@ function Payments() {
               backgroundColor: 'rgba(0, 0, 0, 0.5)'
             },
             content: {
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'white',
-              padding: '20px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              outline: 'none',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              maxWidth: '400px',
-              width: '100%'
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              backgroundColor: 'white', padding: '20px', border: '1px solid #ccc', borderRadius: '4px',
+              outline: 'none', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+              maxWidth: '400px', width: '100%'
             }
           }}
         >

@@ -133,10 +133,10 @@ app.post("/enregistrer-remboursement", async (req, res) => {
         console.error("Erreur lors de l'enregistrement des données de remboursement :", err);
         return res.status(500).json({ error: "Erreur lors de l'enregistrement des données de remboursement." });
       }
-      return res.status(200).json({ 
-        message: "Données de remboursement enregistrées avec succès.",
-        data: result
-       });
+      return res.status(200).json({
+        message: "Remboursement effectuées avec succès.",
+        rest: restApayer
+      });
     }
   );
 });
