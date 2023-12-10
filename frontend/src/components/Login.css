@@ -1,4 +1,8 @@
-.card {
-    max-width: 30% !important;
+body {
     margin: auto !important;
+}
+
+label {
+    margin: 0 !important;
+    text-align: start !important;
 }

@@ -78,7 +78,7 @@ class App extends Component {
         <Row>
           <Col lg={2} sm={2} xs={12} className='m-0 p-0'>
             <Card className='show-on-pc'>
-              <Card.Header className='mb-4' id="logo-cefor"><img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} /> </Card.Header>
+              <Card.Header className='mb-4' id="logo-cefor"><img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} /></Card.Header>
               <Card.Text className='px-4 mb-0 small-text' >NAVIGATION</Card.Text>
               <ListGroup variant="flush" className='mt-0 p-2 height-100' >
                 <ListGroup.Item className={activeMenuItem === 'clients' ? 'bg-primary active-menu' : ''}>

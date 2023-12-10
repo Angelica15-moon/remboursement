@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from 'react-modal';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,8 +10,9 @@ import FormLabel from 'react-bootstrap/esm/FormLabel';
 import JsPDF from "jspdf";
 import "jspdf-autotable";
 import logoImage from "./assets/logo/logo.png";
-
-Modal.setAppElement('#root');
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCancel, faCheckToSlot } from "@fortawesome/free-solid-svg-icons";
+import Modal from "react-bootstrap/Modal";
 
 function validateData(remboursementData) {
   let errors = "Veuillez remplire tous les champs"
@@ -37,9 +37,11 @@ function Payments() {
   const collecteur = localStorage.getItem("user");
   const [agence, setAgence] = useState("");
   const numeroFacture = "FACT" + Date.now();
-  const [message, setMessage] = useState(""); // Pour le message d'alerte
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const [error, setErrorMessage] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   function getProfil() {
     fetch(`http://localhost:3002/profil?user=${encodeURIComponent(collecteur)}`, {
@@ -59,8 +61,7 @@ function Payments() {
     return new Date(Date.now()).toLocaleDateString(undefined, options);
   }
 
-  const handleRemboursementSubmit = (e) => {
-    e.preventDefault();
+  function remboursementSubmit() {
     const formattedDate = new Date().toISOString().split('T')[0];
     const remboursementData = {
       montantAPayer,
@@ -74,20 +75,18 @@ function Payments() {
 
     if (validateData(remboursementData)) {
       setMessage(validateData(remboursementData));
-      setModalIsOpen(true);
     } else {
       axios.post("http://localhost:3002/enregistrer-remboursement", remboursementData)
         .then((response) => {
           setMontantAPayer("");
-          console.log();
           setMessage(response.data.message);
           generateFacture(selectedClient, remboursementData, response.data.rest);
-          setModalIsOpen(true);
+          setShow(false);
         })
         .catch((error) => {
           console.error("Erreur lors de l'enregistrement du remboursement :", error);
           setMessage(error.response.data.message);
-          setModalIsOpen(true);
+          setShow(false);
         });
     }
   }
@@ -118,25 +117,32 @@ function Payments() {
     setMontantAPayer(0);
   }
 
-
   const generateFacture = (client, donnee, rest) => {
     const doc = new JsPDF();
     const title = "FACTURE";
-    const logoWidth = 30;
-    const logoHeight = 10;
+    const logoWidth = 100;
+    const logoHeight = 40;
     const fontSize = 12;
     doc.addImage(logoImage, "PNG", 14, 10, logoWidth, logoHeight);
     doc.setFontSize(fontSize + 5);
-    doc.text(title, 15, 28);
-    doc.text(client.nom, 15, 34);
+    doc.text(title, 15, 58);
+    doc.text(client.nom, 130, 58);
     doc.setFontSize(fontSize);
-    doc.text("Numero : " + donnee.numeroFacture, 15, 40);
-    doc.text("Date : " + formatDate(Date.now()), 15, 46);
-    doc.text("Reference client : " + client.RefClient, 15, 52);
-    doc.text("Reférence crédit : " + client.RefCredit, 15, 58);
-    doc.text("Payement effectué : " + donnee.montantAPayer + " Ar", 15, 64);
-    doc.text("Reste a payé : " + rest + " Ar", 15, 70);
-    doc.save(`${donnee.numeroFacture}.pdf`);
+    doc.text("Date : " + formatDate(Date.now()), 15, 64);
+    doc.text("Reference : " + donnee.numeroFacture, 15, 70);
+    doc.text("Reference client : " + client.RefClient, 130, 64);
+    doc.text("Reférence crédit : " + client.RefCredit, 130, 70);
+    doc.setFontSize(fontSize + 5);
+    doc.text("VERSEMENT EN ESPECE", 73, 88);
+    doc.setFontSize(fontSize);
+    doc.text("Nous avons reçue en espece le montant de", 15, 94);
+    doc.text(donnee.montantAPayer + " MGA", 15, 102);
+    doc.text("Reste a payé : " + rest + " Ar", 15, 108);
+    doc.autoPrint();
+    setTimeout(() => {
+      setErrorMessage("");
+      setMessage("");
+    }, 5000);
   };
 
   return (
@@ -192,10 +198,10 @@ function Payments() {
             </Row>
             <hr />
             <h2 className='small'>Champs à saisir ....</h2>
-            <Form onSubmit={handleRemboursementSubmit}>
-              {error && (
-                <FormLabel className='text-danger'>{error}</FormLabel>
-              )}
+            <Form>
+              {error ? (
+                <FormLabel className="text-danger">{error}</FormLabel>
+              ) : (<FormLabel className="text-success">{message}</FormLabel>)}
               <Row className='p-2'>
                 <Col>
                   <Form.Label className='small'><strong>Agent :&nbsp;{collecteur}</strong></Form.Label><br />
@@ -211,32 +217,29 @@ function Payments() {
                   </Form.Group>
                   <div className='text-end mt-2'>
                     <Button xs={6} type='button' onClick={clearData} className='mx-3' variant="danger">Annuler</Button>
-                    <Button type='submit' className='display-inline' variant="success">Enregistrer</Button>
+                    <Button type='button' className='display-inline' onClick={handleShow} variant="success">Enregistrer</Button>
                   </div>
                 </Col>
+                <Modal show={show} onHide={handleClose} centered backdrop="static" keyboard={false} >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Information</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <FormLabel>Confirmez vous l'enregistrement de cet remboursement ?</FormLabel>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      <FontAwesomeIcon icon={faCancel} />&nbsp;Annuler
+                    </Button>
+                    <Button variant="primary" onClick={() => remboursementSubmit()}>
+                      <FontAwesomeIcon icon={faCheckToSlot} />&nbsp;Confirmer
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
               </Row>
             </Form>
           </div>
         )}
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
-          contentLabel="Message d'alerte"
-          style={{
-            overlay: {
-              backgroundColor: 'rgba(0, 0, 0, 0.5)'
-            },
-            content: {
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              backgroundColor: 'white', padding: '20px', border: '1px solid #ccc', borderRadius: '4px',
-              outline: 'none', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-              maxWidth: '400px', width: '100%'
-            }
-          }}
-        >
-          <p>{message}</p>
-          <button onClick={() => setModalIsOpen(false)}>Fermer</button>
-        </Modal>
       </Card>
     </div>
   );

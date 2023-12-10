@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import './Login.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
+import logoImage from '../assets/logo/logo.png';
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -41,9 +42,12 @@ export default function Login() {
 
     return (
         <div className="m-5 p-5">
-            <Card>
-                <Card.Header className='text-center'>Connexion</Card.Header>
+            <Card id="login-card">
+                <Card.Header className='text-center'>Authentification</Card.Header>
                 <Card.Body className='p-3'>
+                    <div className='text-center mb-2'>
+                        <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
+                    </div>
                     {errorMessage && (
                         <FormLabel className='text-danger'>{errorMessage}</FormLabel>
                     )}

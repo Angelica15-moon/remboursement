@@ -39,8 +39,9 @@ function calculRestAPayer(refClient, remboursement) {
   return new Promise((resolve, reject) => {
     const ref = refClient.split("/");
     let client = 0;
+    let soldeRestant = 0;
     const sql_client = "SELECT c.montantAbandonnee FROM excel_data c WHERE refClient LIKE '%" + ref[1] + "%'";
-    const sql_payements = "SELECT * FROM payments WHERE refClient LIKE '%" + ref[1] + "%'";
+    const sql_payements = "SELECT * FROM payments WHERE refClient LIKE '%" + ref[1] + "%' ORDER BY id DESC";
 
     db.query(sql_client, (err, result) => {
       if (err) {
@@ -59,20 +60,24 @@ function calculRestAPayer(refClient, remboursement) {
           message: "Erreur lors de l'enregistrement du remboursement."
         });
       }
-      for (resp of results) {
-        remboursement += resp.montantAPayer
-      }
-      // Traitement des résultats ici, par exemple, pour calculer le solde restant.
-      if (client && remboursement) {
-        const soldeRestant = client - remboursement;
-        if (soldeRestant <= 0) {
+
+      if (results.length) {
+        if (results[0].ResteApayer <= 0) {
           reject({
             code: 402,
             message: "Ce client n'a plus de rest a payer."
           });
         } else {
-          resolve(soldeRestant);
+          soldeRestant = results[0].ResteApayer - remboursement;
         }
+      } else {
+        soldeRestant = client - remboursement;
+      }
+
+
+      // Traitement des résultats ici, par exemple, pour calculer le solde restant.
+      if (soldeRestant) {
+        resolve(soldeRestant);
       } else {
         resolve(client);
       }
