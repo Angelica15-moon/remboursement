@@ -31,7 +31,6 @@ export default function App() {
   };
 
   const handleImportExcel = () => {
-    setShow(true);
     if (excelData) {
       const mappedData = excelData.map((row) => ({
         RefClient: row.RefClient,
@@ -54,6 +53,7 @@ export default function App() {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
+          setShow(true);
         })
         .catch((error) => {
           console.error('Erreur lors de l\'importation des données Excel sur le backend:', error);
