@@ -100,6 +100,10 @@ code {
   color: rgb(255, 255, 255) !important;
 }
 
+.active-menu {
+  background-color: rgb(95, 91, 94) !important;
+}
+
 .container-fluid button {
   font-size: large !important;
   border: none !important;
@@ -119,12 +123,13 @@ code {
 }
 
 .card-header {
-  background-color: rgb(47, 76, 205) !important;
+  background-color: rgb(7, 116, 143) !important;
   color: beige !important;
 }
 
 .rdt_TableHeadRow {
-  background-color: turquoise !important;
+  background-color: rgb(1, 59, 87) !important;
+  color: #fff !important;
 }
 
 #montantAPayer {

@@ -56,7 +56,9 @@ class App extends Component {
       <div className='bg-secondary height-100'>
         <Navbar bg="light" collapseOnSelect data-bs-theme="light" expand="lg" className="bg-body-tertiary hide-on-pc px-2 mb-3">
           <Container fluid>
-            <Navbar.Brand href="#" onClick={() => this.handleMenuItemClick('clients')}>Cefor - GAP</Navbar.Brand>
+            <Navbar.Brand href="#" onClick={() => this.handleMenuItemClick('clients')}>
+              <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarScroll" />
             <Navbar.Collapse id="navbarScroll">
               <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '200px' }} navbarScroll >

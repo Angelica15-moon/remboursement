@@ -141,16 +141,18 @@ function Payments() {
     const logoWidth = 60;
     const logoHeight = 20;
     const fontSize = 12;
+    doc.setFillColor(200, 200, 200); // Couleur du fond (RGB)
+    doc.rect(0, 0, 500, 1000, 'F');
     doc.addImage(logoImage, "PNG", 130, 10, logoWidth, logoHeight);
-    doc.setFontSize(fontSize + 5);
+    doc.setFontSize(fontSize + 15);
     doc.text(title, 15, 30);
     doc.setFontSize(fontSize + 5);
     doc.text(client.nom, 15, 58);
     doc.setFontSize(fontSize);
-    doc.text("Date : " + formatDate(Date.now()), 15, 64);
-    doc.text("Reference : " + donnee.numeroFacture, 15, 70);
-    doc.text("Reference client : " + client.RefClient, 130, 64);
-    doc.text("Reférence crédit : " + client.RefCredit, 130, 70);
+    doc.text("Date : " + formatDate(Date.now()), 130, 64);
+    doc.text("Reference : " + donnee.numeroFacture, 130, 70);
+    doc.text("Reference client : " + client.RefClient, 15, 64);
+    doc.text("Reférence crédit : " + client.RefCredit, 15, 70);
     doc.setFontSize(fontSize + 5);
     doc.text("VERSEMENT EN ESPECE", 15, 88);
     doc.setFontSize(fontSize);
