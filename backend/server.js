@@ -182,7 +182,7 @@ app.post('/import-excel', (req, res) => {
     }
 
     console.log('Excel data imported successfully into MySQL.');
-    return res.status(200).json({ message: 'Excel data imported successfully into MySQL.' });
+    return res.status(200).json({ message: 'Importation des données éffectué avec success.' });
   });
 });
 

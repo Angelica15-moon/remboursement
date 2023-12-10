@@ -4,9 +4,15 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Modal from "react-bootstrap/Modal";
+import FormLabel from "react-bootstrap/esm/FormLabel";
 
 export default function App() {
   const [excelData, setExcelData] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handleExcelUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -25,6 +31,7 @@ export default function App() {
   };
 
   const handleImportExcel = () => {
+    setShow(true);
     if (excelData) {
       const mappedData = excelData.map((row) => ({
         RefClient: row.RefClient,
@@ -47,7 +54,6 @@ export default function App() {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          // Affichez un message de confirmation ici si nécessaire
         })
         .catch((error) => {
           console.error('Erreur lors de l\'importation des données Excel sur le backend:', error);
@@ -72,6 +78,20 @@ export default function App() {
           <div className='text-center'>
             <Button onClick={handleImportExcel} variant="success">Importer</Button>
           </div>
+          <Modal show={show} onHide={handleClose} centered  backdrop="static" keyboard={false} >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Information</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <FormLabel>
+                      Confirmez vous l'enregistrement de cet remboursement ?
+                    </FormLabel>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>Confirmer
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
         </Card.Body>
       </Card>
     </div>
