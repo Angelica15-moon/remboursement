@@ -138,29 +138,30 @@ function Payments() {
   const generateFacture = (client, donnee, rest) => {
     const doc = new JsPDF();
     const title = "FACTURE";
-    const logoWidth = 100;
-    const logoHeight = 40;
+    const logoWidth = 60;
+    const logoHeight = 20;
     const fontSize = 12;
-    doc.addImage(logoImage, "PNG", 14, 10, logoWidth, logoHeight);
+    doc.addImage(logoImage, "PNG", 130, 10, logoWidth, logoHeight);
     doc.setFontSize(fontSize + 5);
-    doc.text(title, 15, 58);
-    doc.text(client.nom, 130, 58);
+    doc.text(title, 15, 30);
+    doc.setFontSize(fontSize + 5);
+    doc.text(client.nom, 15, 58);
     doc.setFontSize(fontSize);
     doc.text("Date : " + formatDate(Date.now()), 15, 64);
     doc.text("Reference : " + donnee.numeroFacture, 15, 70);
     doc.text("Reference client : " + client.RefClient, 130, 64);
     doc.text("Reférence crédit : " + client.RefCredit, 130, 70);
     doc.setFontSize(fontSize + 5);
-    doc.text("VERSEMENT EN ESPECE", 73, 88);
+    doc.text("VERSEMENT EN ESPECE", 15, 88);
     doc.setFontSize(fontSize);
-    doc.text(
-      "Nous avons reçue en espece le montant de " +
-        donnee.montantAPayer +
-        " MGA",
-      15,
-      94
+    doc.text("Nous avons reçue en espece le montant de " + donnee.montantAPayer + " MGA",
+      15, 94
     );
-    doc.text("Reste a payé : " + rest + " Ar", 15, 102);
+    doc.text("Reste a payé : " + rest + " MGA", 15, 102);
+    doc.text("Siege : Lot IV P 64 Ter BA Antsalovana, Antananarivo 101", 15, 132);
+    doc.text("Tél : 020 22 336 52", 15, 138);
+    doc.text("E-mail : cefor@blueline.mg", 60, 138);
+    doc.text("Site web : www.cefor.mg", 125, 138);
     doc.save(`${donnee.numeroFacture}.pdf`);
     setTimeout(() => {
       setErrorMessage("");

@@ -44,7 +44,7 @@ export default function Login() {
 
     var styles = {
         loginCard: {
-            width: '40%',
+            width: '50%',
             margin: 'auto'
         }
     };
@@ -54,43 +54,39 @@ export default function Login() {
             <Card>
                 <Card.Header className='text-center'>Authentification</Card.Header>
                 <Card.Body className='p-3'>
-                    <div className='text-center mb-2'>
-                        <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
-                    </div>
                     <Row>
                         <Col>
-                            <div className='text-center mb-2'>
+                            <div className='mb-2'>
                                 <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
                             </div>
                             <div>
-                                <FormLabel>{errorMessage}</FormLabel>
-                                <FormLabel>{errorMessage}</FormLabel>
-                                <FormLabel>{errorMessage}</FormLabel>
-                                <FormLabel>{errorMessage}</FormLabel>
-                                <FormLabel>{errorMessage}</FormLabel>
+                                <FormLabel><strong>Siege : Lot IV P 64 Ter BA Antsalovana, Antananarivo 101</strong></FormLabel>
+                                <FormLabel><strong>Tél : 020 22 336 52</strong></FormLabel>
+                                <FormLabel><strong>E-mail : <a target="_blank" rel="noopener noreferrer" href='mailto:cefor@blueline.mg'>cefor@blueline.mg</a></strong></FormLabel>
+                                <FormLabel><strong>Site web : <a target="_blank" rel="noopener noreferrer" href='https://www.cefor.mg/#accueil'>www.cefor.mg</a></strong></FormLabel>
                             </div>
                         </Col>
-                        <Col>
+                        <Col className='pt-4'>
+                            {errorMessage && (
+                                <FormLabel className='text-danger'>{errorMessage}</FormLabel>
+                            )}
+                            <Form onSubmit={loginUser}>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='small' htmlFor="username">Nom d'utilisateur</Form.Label>
+                                    <Form.Control type='text' id="username" placeholder="Nom d'utilisateur" value={username}
+                                        required size='sm' onChange={(e) => setUsername(e.target.value)} autoFocus />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label className='small' htmlFor="password">Mot de passe</Form.Label>
+                                    <Form.Control type='password' id="password" placeholder="Mot de passe" value={password}
+                                        required size='sm' onChange={(e) => setPassword(e.target.value)} />
+                                </Form.Group>
+                                <div className='text-end mt-2'>
+                                    <Button type='submit' className='display-inline' variant="success">S'identifier</Button>
+                                </div>
+                            </Form>
                         </Col>
                     </Row>
-                    {errorMessage && (
-                        <FormLabel className='text-danger'>{errorMessage}</FormLabel>
-                    )}
-                    <Form onSubmit={loginUser}>
-                        <Form.Group className="mb-3">
-                            <Form.Label className='small' htmlFor="username">Nom d'utilisateur</Form.Label>
-                            <Form.Control type='text' id="username" placeholder="Nom d'utilisateur" value={username}
-                                required size='sm' onChange={(e) => setUsername(e.target.value)} />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label className='small' htmlFor="password">Mot de passe</Form.Label>
-                            <Form.Control type='password' id="password" placeholder="Mot de passe" value={password}
-                                required size='sm' onChange={(e) => setPassword(e.target.value)} />
-                        </Form.Group>
-                        <div className='text-end mt-2'>
-                            <Button type='submit' className='display-inline' variant="success">S'identifier</Button>
-                        </div>
-                    </Form>
                 </Card.Body>
             </Card>
         </div>
