@@ -21,6 +21,7 @@ function LoginService(db, username, password) {
                     code: 500,
                     message: "Erreur lors de la récupération des collecteur."
                 });
+                return;
             }
 
             if (results.length === 0) {
@@ -28,6 +29,7 @@ function LoginService(db, username, password) {
                     code: 500,
                     message: "Aucun utilisateur trouver avec l'identifiant : " + username
                 });
+                return;
             }
 
             if (!results[0].active) {
@@ -35,6 +37,7 @@ function LoginService(db, username, password) {
                     code: 402,
                     message: "Votre compte a ete desactive, veuillez contactez votre administrateur."
                 });
+                return;
             }
 
             if (results.length) {
@@ -44,6 +47,7 @@ function LoginService(db, username, password) {
                         message: "Invalid credentials"
                     });
                 }
+                return;
             }
 
             let data = {

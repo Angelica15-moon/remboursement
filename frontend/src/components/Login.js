@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button';
 import './Login.css';
 import FormLabel from 'react-bootstrap/esm/FormLabel';
 import logoImage from '../assets/logo/logo.png';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -40,14 +42,37 @@ export default function Login() {
         window.location.reload();
     }
 
+    var styles = {
+        loginCard: {
+            width: '40%',
+            margin: 'auto'
+        }
+    };
+
     return (
-        <div className="m-5 p-5">
-            <Card id="login-card">
+        <div style={styles.loginCard} className="p-5">
+            <Card>
                 <Card.Header className='text-center'>Authentification</Card.Header>
                 <Card.Body className='p-3'>
                     <div className='text-center mb-2'>
                         <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
                     </div>
+                    <Row>
+                        <Col>
+                            <div className='text-center mb-2'>
+                                <img src={logoImage} alt="cefor" style={{ width: '127px', height: '41px' }} />
+                            </div>
+                            <div>
+                                <FormLabel>{errorMessage}</FormLabel>
+                                <FormLabel>{errorMessage}</FormLabel>
+                                <FormLabel>{errorMessage}</FormLabel>
+                                <FormLabel>{errorMessage}</FormLabel>
+                                <FormLabel>{errorMessage}</FormLabel>
+                            </div>
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Row>
                     {errorMessage && (
                         <FormLabel className='text-danger'>{errorMessage}</FormLabel>
                     )}
