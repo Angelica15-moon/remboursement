@@ -62,13 +62,21 @@ function ClientList() {
     [clientList, filterText]
   );
 
-  const customStyles = {
-    rows: {
-      style: (rowData, index) => ({
-        backgroundColor: rowData.resteApayer === 0 ? 'lightgreen' : 'inherit',
+  const conditionalRowStyles = [
+    {
+      when: row => row.resteApayer <= 1000,
+      style: {
+        backgroundColor: 'yellow',
+        color: 'black'
+      },
+    },
+    {
+      when: row => row.resteApayer === 0,
+      style: row => ({
+        backgroundColor: row.resteApayer === 0 ? 'lightgreen' : 'inerit',
       }),
     },
-  };
+  ];
 
   const subHeaderComponentMemo = useMemo(() => {
     return (
@@ -96,8 +104,8 @@ function ClientList() {
             columns={columns} data={filteredItems} dense direction="auto" pagination
             paginationComponentOptions={paginationComponentOptions}
             fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
-            persistTableHead responsive subHeader subHeaderComponent={subHeaderComponentMemo}
-            customStyles={customStyles}
+            persistTableHead responsive subHeader subHeaderComponent={subHeaderComponentMemo} 
+            conditionalRowStyles={conditionalRowStyles}
           />
         </div>
       </Card>
