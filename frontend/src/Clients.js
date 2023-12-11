@@ -62,6 +62,14 @@ function ClientList() {
     [clientList, filterText]
   );
 
+  const customStyles = {
+    rows: {
+      style: (rowData, index) => ({
+        backgroundColor: rowData.resteApayer === 0 ? 'lightgreen' : 'inherit',
+      }),
+    },
+  };
+
   const subHeaderComponentMemo = useMemo(() => {
     return (
       <Row>
@@ -89,6 +97,7 @@ function ClientList() {
             paginationComponentOptions={paginationComponentOptions}
             fixedHeader fixedHeaderScrollHeight="400px" highlightOnHover ointerOnHover
             persistTableHead responsive subHeader subHeaderComponent={subHeaderComponentMemo}
+            customStyles={customStyles}
           />
         </div>
       </Card>

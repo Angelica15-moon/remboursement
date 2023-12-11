@@ -60,7 +60,6 @@ function calculRestAPayer(refClient, remboursement) {
           message: "Erreur lors de l'enregistrement du remboursement."
         });
       }
-
       if (results.length) {
         if (results[0].ResteApayer <= 0) {
           reject({
@@ -73,14 +72,7 @@ function calculRestAPayer(refClient, remboursement) {
       } else {
         soldeRestant = client - remboursement;
       }
-
-
-      // Traitement des résultats ici, par exemple, pour calculer le solde restant.
-      if (soldeRestant) {
-        resolve(soldeRestant);
-      } else {
-        resolve(client);
-      }
+      resolve(soldeRestant);
     });
   });
 }
