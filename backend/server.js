@@ -187,7 +187,6 @@ app.post('/import-excel', (req, res) => {
 });
 
 app.get('/excel-data', (req, res) => {
-  // Effectuez une requête SQL pour récupérer les données de la table excel_data
   const sql = 'SELECT * FROM excel_data';
 
   db.query(sql, (err, results) => {
@@ -196,7 +195,37 @@ app.get('/excel-data', (req, res) => {
       return res.status(500).json({ error: 'Erreur lors de la récupération des données.' });
     }
 
-    return res.status(200).json(results);
+    const promises = results.map((row) => {
+      // Pour chaque résultat, vous pouvez faire une autre requête ici
+      // Par exemple, une requête pour récupérer des données de la table payments
+      const paymentSql = `SELECT ResteApayer FROM payments WHERE RefClient = '${row.RefClient}' ORDER BY id DESC`;
+
+      return new Promise((resolve, reject) => {
+        db.query(paymentSql, (err, paymentResults) => {
+          if (err) {
+            reject(err);
+          } else {
+            // Ajoutez les résultats de la requête de paiement à la ligne d'origine
+            if (paymentResults[0]) {
+              row.resteApayer = paymentResults[0].ResteApayer;
+            }else {
+              row.resteApayer = row.MontantAbandonnee;
+            }
+            resolve(row);
+          }
+        });
+      });
+    });
+
+    // Attendez que toutes les promesses soient résolues
+    Promise.all(promises)
+      .then((finalResults) => {
+        return res.status(200).json(finalResults);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des paiements :', error);
+        return res.status(500).json({ error: 'Erreur lors de la récupération des paiements.' });
+      });
   });
 });
 

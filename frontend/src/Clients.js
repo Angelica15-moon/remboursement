@@ -26,7 +26,7 @@ function ClientList() {
 
   var clientList = clients.map(client => new Client(
     client.RefClient, client.RefCredit, client.nom,
-    client.MontantAbandonnee, client.DatePassagePerte,
+    client.resteApayer, client.DatePassagePerte,
     client.CAResponsable, client.Agence, client.Type
   ));
 
@@ -34,7 +34,7 @@ function ClientList() {
     { name: 'Ref Client', selector: row => row.refClient, sortable: true },
     { name: 'Ref Credit', selector: row => row.refCredit, sortable: true },
     { name: 'Nom', selector: row => row.nom, sortable: true },
-    { name: 'Montant Abandonné', selector: row => row.montantAbandonnee, sortable: true },
+    { name: 'Rest a payé', selector: row => row.resteApayer, sortable: true },
     { name: 'Date Passage Perte', selector: row => row.datePassagePerte, sortable: true },
     { name: 'CA Responsable', selector: row => row.caResponsable, sortable: true },
     { name: 'Agence', selector: row => row.agence, sortable: true },
@@ -53,7 +53,7 @@ function ClientList() {
       item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
-        (item.montantAbandonnee && item.montantAbandonnee.includes(filterText.toLowerCase())) ||
+        (item.resteApayer && item.resteApayer.includes(filterText.toLowerCase())) ||
         (item.datePassagePerte && item.datePassagePerte.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
@@ -97,11 +97,11 @@ function ClientList() {
 }
 
 class Client {
-  constructor(refClient, refCredit, nom, montantAbandonnee, datePassagePerte, caResponsable, agence, type) {
+  constructor(refClient, refCredit, nom, resteApayer, datePassagePerte, caResponsable, agence, type) {
     this.refClient = refClient;
     this.refCredit = refCredit;
     this.nom = nom;
-    this.montantAbandonnee = montantAbandonnee;
+    this.resteApayer = resteApayer;
     this.datePassagePerte = datePassagePerte;
     this.caResponsable = caResponsable;
     this.agence = agence;

@@ -141,8 +141,6 @@ function Payments() {
     const logoWidth = 60;
     const logoHeight = 20;
     const fontSize = 12;
-    doc.setFillColor(200, 200, 200); // Couleur du fond (RGB)
-    doc.rect(0, 0, 500, 1000, 'F');
     doc.addImage(logoImage, "PNG", 130, 10, logoWidth, logoHeight);
     doc.setFontSize(fontSize + 15);
     doc.text(title, 15, 30);
@@ -160,10 +158,13 @@ function Payments() {
       15, 94
     );
     doc.text("Reste a payé : " + rest + " MGA", 15, 102);
-    doc.text("Siege : Lot IV P 64 Ter BA Antsalovana, Antananarivo 101", 15, 132);
-    doc.text("Tél : 020 22 336 52", 15, 138);
-    doc.text("E-mail : cefor@blueline.mg", 60, 138);
-    doc.text("Site web : www.cefor.mg", 125, 138);
+    
+    doc.setFillColor(7, 116, 143); // Couleur du fond (RGB)
+    doc.rect(0, 115, 500, 20, 'F');
+    doc.text("Siege : Lot IV P 64 Ter BA Antsalovana, Antananarivo 101", 15, 122);
+    doc.text("Tél : 020 22 336 52", 15, 128);
+    doc.text("E-mail : cefor@blueline.mg", 60, 128);
+    doc.text("Site web : www.cefor.mg", 125, 128);
     doc.save(`${donnee.numeroFacture}.pdf`);
     setTimeout(() => {
       setErrorMessage("");
