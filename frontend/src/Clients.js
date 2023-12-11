@@ -53,7 +53,7 @@ function ClientList() {
       item => (item.nom && item.nom.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.refClient && item.refClient.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.refCredit && item.refCredit.toLowerCase().includes(filterText.toLowerCase())) ||
-        (item.resteApayer && item.resteApayer.includes(filterText.toLowerCase())) ||
+        (item.resteApayer && item.resteApayer.toString().includes(filterText.toLowerCase())) ||
         (item.datePassagePerte && item.datePassagePerte.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.caResponsable && item.caResponsable.toLowerCase().includes(filterText.toLowerCase())) ||
         (item.agence && item.agence.toLowerCase().includes(filterText.toLowerCase())) ||
